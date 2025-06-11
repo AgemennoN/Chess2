@@ -3,6 +3,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class EnemyPiece : ChessPiece {
-    public int health;
-    public int cooldownToMove;
+    private int maxHealth;
+    private int currenHealth;
+    private int cooldownToMove;
+
+    private void Awake() {
+        currenHealth = maxHealth;
+    }
+
 }

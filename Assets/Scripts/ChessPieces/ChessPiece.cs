@@ -2,21 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChessPiece : MonoBehaviour {
-    protected int currentX;
-    protected int currentY;
 
-    public void SetPosition(int x, int y) {
-        currentX = x;
-        currentY = y;
+    protected BoardTile currentTile;
 
-        // Move the GameObject to match its board tile position
-        float worldX = -4 + x + 0.5f;
-        float worldY = -4 + y + 0.5f;
-        transform.position = new Vector3(worldX, worldY, 0);
-    }
+    public void SetPosition(BoardTile tile) {
+        if (currentTile != null)
+            currentTile.SetPiece(null); // Remove from old tile
 
-    public Vector2Int GetPosition() {
-        return new Vector2Int(currentX, currentY);
+        currentTile = tile;
+        tile.SetPiece(this); // Update new tile  
+        // TO DO: Might use event that listens when a piece is placed on a Tile to be More OOP maybe?
+        transform.position = tile.transform.position;
     }
 
     // Virtual methods to be overridden in derived piece classes
