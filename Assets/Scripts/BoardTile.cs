@@ -10,9 +10,8 @@ public class BoardTile : MonoBehaviour {
         tile.positionY = positionY;
         tile.tileSize = tileSize;
 
-        tile.spriteRenderer = tile.gameObject.AddComponent<SpriteRenderer>();
-        tile.spriteRenderer.sprite = sprite;
-        tile.transform.localScale = new Vector3(4.5f, 4.5f);
+        tile.CreateSprite(sprite);
+        tile.CreateCollider();
 
         tile.SetPosition();
         tile.SetPiece(chessPiece);
@@ -22,6 +21,7 @@ public class BoardTile : MonoBehaviour {
         if (parent != null) {
             tile.transform.SetParent(parent.transform);
         }
+
         return tile;
     }
 
@@ -29,11 +29,12 @@ public class BoardTile : MonoBehaviour {
     private int positionY;
     private float tileSize;
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
     public ChessPiece pieceOnIt; // TO DO: Should it be public? Or is there a better option to be more OOP
 
     public ChessPiece GetPiece() => pieceOnIt;
 
-    public void SetPiece(ChessPiece piece) {
+        public void SetPiece(ChessPiece piece) {
         pieceOnIt = piece;
     }
 
@@ -46,6 +47,22 @@ public class BoardTile : MonoBehaviour {
 
     public Vector2Int GetPosition() {
         return new Vector2Int(positionX, positionY);
+    }
+
+    private void CreateSprite(Sprite sprite) {
+        spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
+        spriteRenderer.sortingLayerName = "ChessBoard";
+        transform.localScale = new Vector3(4.5f, 4.5f);
+    }
+
+    private void CreateCollider() {
+        boxCollider = gameObject.AddComponent<BoxCollider2D>();
+
+        Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
+        Vector2 worldSize = new Vector2(spriteSize.x * transform.localScale.x, spriteSize.y * transform.localScale.y);
+        boxCollider.size = spriteSize;
+        boxCollider.offset = spriteRenderer.sprite.bounds.center;
     }
 
 }
