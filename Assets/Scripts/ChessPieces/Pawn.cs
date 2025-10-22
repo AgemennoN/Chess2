@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class Pawn : EnemyPiece {
 
-    private void Awake() {
-        maxHealth = 3;
-        currenHealth = maxHealth;
-        speed = 5;
-        cooldownToMove = Random.Range(2, speed+1);
-        readyToMove = false;
-    }
 
     private void Start() {
         board = BoardManager.Instance.GetBoard();

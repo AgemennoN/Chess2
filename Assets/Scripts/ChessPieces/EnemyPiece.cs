@@ -6,14 +6,29 @@ using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyPiece : ChessPiece {
-    [SerializeField] protected int maxHealth;
-    [SerializeField] protected int currenHealth;
-    [SerializeField] protected int speed; // Max cooldownToMove
-    [SerializeField] protected int cooldownToMove;
-    [SerializeField] protected bool readyToMove;
+    [SerializeField] protected EnemyTypeSO enemyTypeSO;
+    //protected EnemyType enemyType;   TO DO: Not using right now
+    protected int maxHealth;
+    protected int currenHealth;
+    protected int speed; // Max cooldownToMove
+    protected int cooldownToMove;
+    protected bool readyToMove;
 
     protected List<BoardTile> availableTiles;
     protected BoardTile[,] board;
+
+
+    private void Awake() {
+        if (enemyTypeSO != null) {
+            maxHealth = enemyTypeSO.maxHealth;
+            currenHealth = maxHealth;
+            speed = enemyTypeSO.speed;
+            cooldownToMove = UnityEngine.Random.Range(2, speed + 1);
+            readyToMove = false;
+
+            //enemyType = enemyTypeSO.enemyType; TO DO Not using right now
+        }
+    }
 
     private void Start() {
         board = BoardManager.Instance.GetBoard();
@@ -33,7 +48,7 @@ public class EnemyPiece : ChessPiece {
                     StopReadyingToMove();
                     MoveToPosition(DecideMovementTile(availableTiles));
                     cooldownToMove = speed;
-                    Debug.Log($"GameObject {gameObject.name} Taking Action");
+                    Debug.Log($"GameObject {gameObject.name} Taking Action maxHealth: {maxHealth}, speed: {speed}");
                     //MOVE and Stop Shaking
                 }
             } else { // No Available Movement

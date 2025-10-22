@@ -150,7 +150,7 @@ public class EnemyManager : MonoBehaviour {
     }
 
 
-private void EndTurn() {
+    private void EndTurn() {
         turnManager.EndEnemyTurn();
     }
 

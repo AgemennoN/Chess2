@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour {
     }
 
     private void Update() {
+        // TO DO: Sil PrintBoard
         if (Input.GetKeyDown(KeyCode.P)) {
             PrintBoard();
         }
