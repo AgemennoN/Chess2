@@ -14,7 +14,7 @@ public class Pawn : EnemyPiece {
             board = BoardManager.Instance.GetBoard();
         }
         // TO DO: GetPosition is not logical to be in local methods and called in every use FIX
-        Vector2Int position = currentTile.GetPosition();
+        Vector2Int position = currentTile.GetGridPosition();
         List<BoardTile> availableTiles = new List<BoardTile>();
 
         if (position.y > 0 && (board[position.x, position.y - 1].pieceOnIt == null)) {
@@ -30,7 +30,7 @@ public class Pawn : EnemyPiece {
     }
 
     public override List<BoardTile> GetThreatenedTiles(BoardTile[,] board) {
-        Vector2Int position = currentTile.GetPosition();
+        Vector2Int position = currentTile.GetGridPosition();
         List<BoardTile> threatenedTiles = new List<BoardTile>();
         if (position.x > 0) {
             if (position.y > 0) {

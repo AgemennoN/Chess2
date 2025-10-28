@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class BoardTile : MonoBehaviour {
     
-    public static BoardTile Create(float tileSize, int positionX, int positionY, Sprite sprite, ChessPiece chessPiece=null, GameObject parent=null) {
-        GameObject tileObject = new GameObject($"Tile_{positionX}_{positionY}");
+    public static BoardTile Create(float tileSize, int GridPositionX, int GridPositionY, Sprite sprite, ChessPiece chessPiece=null, GameObject parent=null) {
+        GameObject tileObject = new GameObject($"Tile_{GridPositionX}_{GridPositionY}");
         BoardTile tile = tileObject.AddComponent<BoardTile>();
-        tile.positionX = positionX;
-        tile.positionY = positionY;
+        tile.GridPositionX = GridPositionX;
+        tile.GridPositionY = GridPositionY;
         tile.tileSize = tileSize;
 
         tile.CreateSprite(sprite);
+        tile.gameObject.layer = LayerMask.NameToLayer("BoardTileLayer"); // TO DO: Using string is sad
         tile.CreateCollider();
 
         tile.SetPosition();
@@ -25,8 +26,8 @@ public class BoardTile : MonoBehaviour {
         return tile;
     }
 
-    private int positionX;
-    private int positionY;
+    private int GridPositionX;
+    private int GridPositionY;
     private float tileSize;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
@@ -45,38 +46,13 @@ public class BoardTile : MonoBehaviour {
 
     private void SetPosition() {
         // To do (minor): instead of using a constant as -4 get board size and use -BoardSize/2
-        float worldPositionX = (-4 + positionX) * tileSize + tileSize/2;
-        float worldPositionY = (-4 + positionY) * tileSize + tileSize/2;
+        float worldPositionX = (-4 + GridPositionX) * tileSize + tileSize/2;
+        float worldPositionY = (-4 + GridPositionY) * tileSize + tileSize/2;
         transform.position = new Vector3(worldPositionX, worldPositionY, 0);
     }
 
-    public Vector2Int GetPosition() {
-        return new Vector2Int(positionX, positionY);
-    }
-
-    void OnMouseDown() {
-        if (TurnManager.Instance.IsPlayerTurn() && playerManager.IsActionAvailable()) {
-            playerManager.OnTileClicked(this);
-            HighlightTile(false);
-        }
-    }
-
-    void OnMouseEnter() {
-        if (TurnManager.Instance.IsPlayerTurn()) {
-            if (playerManager.playerAvailableMoves.Contains(this)){
-                HighlightTile(true); // PlaceHolder visual effect
-            }
-        }
-    }
-    void OnMouseExit() {
-        if (TurnManager.Instance.IsPlayerTurn()) {
-            HighlightTile(false);
-        }
-    }
-
-    private void HighlightTile(bool highlight) {
-        spriteRenderer.color = highlight ? Color.yellow : Color.white;
-        // TO DO: Should be an arrow from playerpiece to the tile's direction to indicate movement
+    public Vector2Int GetGridPosition() {
+        return new Vector2Int(GridPositionX, GridPositionY);
     }
 
     private void CreateSprite(Sprite sprite) {

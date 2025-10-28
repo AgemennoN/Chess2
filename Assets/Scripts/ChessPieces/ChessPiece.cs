@@ -42,6 +42,8 @@ public class ChessPiece : MonoBehaviour {
         onComplete?.Invoke(); // Invoke callback when movement is complete
     }
 
+    public BoardTile GetTile() { return currentTile; }
+
     // Virtual methods to be overridden in derived piece classes
     public virtual List<BoardTile> GetAvailableMoves(BoardTile[,] board) {
         return new List<BoardTile>();

@@ -6,7 +6,7 @@ public class PlayerPiece : ChessPiece
     public override List<BoardTile> GetAvailableMoves(BoardTile[,] board) {
         List<BoardTile> tiles = new List<BoardTile>();
 
-        Vector2Int currentPosition = currentTile.GetPosition();
+        Vector2Int currentGridPosition = currentTile.GetGridPosition();
 
         // Check 8 adjacent directions
         for (int dx = -1; dx <= 1; dx++) {
@@ -15,8 +15,8 @@ public class PlayerPiece : ChessPiece
                 if (dx == 0 && dy == 0)
                     continue;
 
-                int newX = currentPosition.x + dx;
-                int newY = currentPosition.y + dy;
+                int newX = currentGridPosition.x + dx;
+                int newY = currentGridPosition.y + dy;
 
                 // Bounds check
                 if (newX >= 0 && newX < board.GetLength(0) && newY >= 0 && newY < board.GetLength(1)) {

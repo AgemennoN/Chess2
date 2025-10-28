@@ -6,8 +6,11 @@ public class PlayerManager : MonoBehaviour {
     public static PlayerManager Instance { get; private set; }
 
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private ArrowIndicator arrowIndicator;
+    [SerializeField] private BoardInputBroadcaster boardInputBroadcaster;
+
     public PlayerPiece playerPiece; // TO DO Should be private to be more OOP
-    public List<BoardTile> playerAvailableMoves;
+    public List<BoardTile> playerAvailableMoves; // TO DO Should be private to be more OOP
     private BoardTile[,] board;
 
     private bool actionAvailable;
@@ -29,10 +32,45 @@ public class PlayerManager : MonoBehaviour {
         board = BoardManager.Instance.GetBoard();
         turnManager = TurnManager.Instance;
 
+        boardInputBroadcaster.OnTileHovered += HandleTileHover;
+        boardInputBroadcaster.OnTileClicked += HandleTileClick;
+
         turnManager.OnPlayerTurnStarted += StartPlayerTurn;
     }
 
+    private void HandleTileHover(BoardTile tile) {
+        if (!TurnManager.Instance.IsPlayerTurn())
+            return;
+
+        if (tile != null && playerAvailableMoves.Contains(tile)) {
+            Vector3 from = playerPiece.GetTile().transform.position;
+            Vector3 to = tile.transform.position;
+            arrowIndicator.Show(from, to);
+        } else {
+            arrowIndicator.Hide();
+        }
+    }
+
+    private void HandleTileClick(BoardTile tile) {
+        if (!TurnManager.Instance.IsPlayerTurn() || !IsActionAvailable())
+            return;
+
+        if (tile != null && playerAvailableMoves.Contains(tile)) {
+            OnTileClicked(tile);
+            arrowIndicator.Hide();
+        }
+    }
+
+    private void OnTileClicked(BoardTile tile) {
+        if (playerAvailableMoves.Contains(tile) && !isActionPhaseActive) {
+            actionAvailable = false;
+            isActionPhaseActive = true; // Start action phase
+            playerPiece.MoveToPosition(tile, OnActionPhaseComplete); // Pass callback
+        }
+    }
+
     public void SpawnPlayer() {
+        // TO DO: Make it private
         GameObject obj = Instantiate(playerPrefab, transform);
         playerPiece = obj.GetComponent<PlayerPiece>();
         if (playerPiece == null) {
@@ -43,19 +81,11 @@ public class PlayerManager : MonoBehaviour {
         playerPiece.SetPosition(board[3, 0]);
     }
 
-    public void StartPlayerTurn() {
+    private void StartPlayerTurn() {
         playerAvailableMoves = playerPiece.GetAvailableMoves(board);
         // Maybe Also get safeMoves(not threatened)
         actionAvailable = true;
         isActionPhaseActive = false;
-    }
-
-    public void OnTileClicked(BoardTile tile) {
-        if (playerAvailableMoves.Contains(tile) && !isActionPhaseActive) {
-            actionAvailable = false;
-            isActionPhaseActive = true; // Start action phase
-            playerPiece.MoveToPosition(tile, OnActionPhaseComplete); // Pass callback
-        }
     }
 
     private void OnActionPhaseComplete() {
