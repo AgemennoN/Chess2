@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private ArrowIndicator arrowIndicator;
     [SerializeField] private BoardInputBroadcaster boardInputBroadcaster;
+    [SerializeField] private Weapon weapon;
 
     public PlayerPiece playerPiece; // TO DO Should be private to be more OOP
     public List<BoardTile> playerAvailableMoves; // TO DO Should be private to be more OOP
@@ -46,8 +47,10 @@ public class PlayerManager : MonoBehaviour {
             Vector3 from = playerPiece.GetTile().transform.position;
             Vector3 to = tile.transform.position;
             arrowIndicator.Show(from, to);
+            //weapon.Aim(false);
         } else {
             arrowIndicator.Hide();
+            //weapon.Aim(true);
         }
     }
 
