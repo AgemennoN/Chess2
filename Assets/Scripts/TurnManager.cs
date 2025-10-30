@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour {
@@ -7,7 +9,7 @@ public class TurnManager : MonoBehaviour {
     public event Action OnPlayerTurnStarted;
     public event Action OnEnemyTurnStarted;
 
-    private enum TurnState { None, PlayerTurn, EnemyTurn }
+    private enum TurnState { None, PlayerTurn, EnemyTurn, ActionPhase}
     private TurnState currentTurn = TurnState.None;
     private int roundNumber;
 
@@ -42,11 +44,48 @@ public class TurnManager : MonoBehaviour {
         OnEnemyTurnStarted?.Invoke();
     }
 
-    public void EndTurn() {
-        if (currentTurn == TurnState.PlayerTurn)
-            StartEnemyTurn();
-        else
-            StartPlayerTurn();
+
+
+    // Actions the ActionPhase should wait for
+    private readonly List<IEnumerator> runningActions = new();
+
+    public void RegisterAction(IEnumerator actionCoroutine) {
+        StartCoroutine(ActionWrapper(actionCoroutine));
+    }
+
+    private IEnumerator ActionWrapper(IEnumerator coroutine) {
+        runningActions.Add(coroutine);
+        yield return coroutine;
+        runningActions.Remove(coroutine);
+    }
+
+    private IEnumerator WaitForActionsToComplete() {
+        yield return new WaitUntil(() => runningActions.Count == 0);
+    }
+
+    public IEnumerator StartActionPhase(bool EndTurnAfterActionPhase) {
+        TurnState oldState = currentTurn;
+        currentTurn = TurnState.ActionPhase;
+
+        yield return StartCoroutine(WaitForActionsToComplete());
+
+        if (EndTurnAfterActionPhase is true) {
+            if (oldState == TurnState.PlayerTurn) {
+                EndPlayerTurn();
+            } else {
+                EndEnemyTurn();
+            }
+        } else {
+            currentTurn = oldState;
+        }
+    }
+
+    public void EndPlayerTurn() {
+        StartEnemyTurn();
+    }
+
+    public void EndEnemyTurn() {
+        StartPlayerTurn();
     }
 
     public bool IsPlayerTurn() => currentTurn == TurnState.PlayerTurn;

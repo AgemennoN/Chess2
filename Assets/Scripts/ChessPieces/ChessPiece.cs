@@ -16,19 +16,19 @@ public class ChessPiece : MonoBehaviour {
         // TO DO: Might use event that listens when a piece is placed on a Tile to be More OOP maybe?
     }
 
-    public void MoveToPosition(BoardTile tile, System.Action onComplete = null) {
+    public void MoveToPosition(BoardTile tile) {
         if (currentTile != null) {
             currentTile.SetPiece(null); // Remove from old tile
-            StartCoroutine(MoveToPositionPhysically(tile.transform.position, 0.3f, onComplete));
+            //StartCoroutine(MoveToPositionPhysically(tile.transform.position, 0.3f));
+            TurnManager.Instance.RegisterAction(MoveToPositionPhysically(tile.transform.position, 0.3f));
         } else {
             transform.position = tile.transform.position;
-            onComplete?.Invoke(); // Immediately invoke callback if no movement
         }
         currentTile = tile;
         tile.SetPiece(this); // Update new tile  
     }
 
-    private IEnumerator MoveToPositionPhysically(Vector3 targetPos, float duration, System.Action onComplete) {
+    private IEnumerator MoveToPositionPhysically(Vector3 targetPos, float duration) {
         Vector3 startPos = transform.position;
         float time = 0f;
 
@@ -39,7 +39,6 @@ public class ChessPiece : MonoBehaviour {
         }
 
         transform.position = targetPos; // Ensure it lands exactly
-        onComplete?.Invoke(); // Invoke callback when movement is complete
     }
 
     public BoardTile GetTile() { return currentTile; }

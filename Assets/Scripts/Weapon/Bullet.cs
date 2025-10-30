@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
@@ -5,8 +6,10 @@ public class Bullet : MonoBehaviour {
     private int damage;
     private float maxDistance;
     private Vector3 startPosition;
-
     private BulletPool pool;
+
+    public event Action<Bullet> OnBulletFinished;
+
 
     public void Initialize(float speed, int damage, float maxDistance, BulletPool pool, int bulletNumberDebug) {
         this.speed = speed;
@@ -35,7 +38,7 @@ public class Bullet : MonoBehaviour {
 
     private void ReturnToPool() {
         Debug.Log("BULLET_ReturnToPool");
-
+        OnBulletFinished?.Invoke(this);
         pool.ReturnBullet(this.gameObject);
     }
 }

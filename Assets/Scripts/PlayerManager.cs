@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
@@ -14,8 +16,6 @@ public class PlayerManager : MonoBehaviour {
     public List<BoardTile> playerAvailableMoves; // TO DO Should be private to be more OOP
     private BoardTile[,] board;
 
-    private bool actionAvailable;
-    private bool isActionPhaseActive;
     private TurnManager turnManager;
 
 
@@ -60,27 +60,25 @@ public class PlayerManager : MonoBehaviour {
     }
 
     private void HandleTileClick(BoardTile tile, Vector3 mouseWorldPos) {
-        if (!TurnManager.Instance.IsPlayerTurn() || !IsActionAvailable())
+        if (!TurnManager.Instance.IsPlayerTurn())
             return;
 
         if (tile != null) {
             if (playerAvailableMoves.Contains(tile)) {
-                MakeKingMovementTo(tile);
                 arrowIndicator.Hide();
+                MakeKingMovementTo(tile);
+                StartCoroutine(TurnManager.Instance.StartActionPhase(true));
             } else if (tile != playerPiece.GetTile()) {
-                Debug.Log("pm: SHOOOOOT");
                 weapon.Shoot(playerPiece.transform.position, mouseWorldPos);
+                StartCoroutine(TurnManager.Instance.StartActionPhase(true));
             }
         }
+
     }
 
     private void MakeKingMovementTo(BoardTile tile) {
-        if (!isActionPhaseActive) {
-            if (playerAvailableMoves.Contains(tile)) {
-                actionAvailable = false;
-                isActionPhaseActive = true; // Start action phase
-                playerPiece.MoveToPosition(tile, OnActionPhaseComplete); // Pass callback
-            }
+        if (playerAvailableMoves.Contains(tile)) {
+            playerPiece.MoveToPosition(tile); // Pass callback
         }
     }
 
@@ -99,21 +97,9 @@ public class PlayerManager : MonoBehaviour {
     private void StartPlayerTurn() {
         playerAvailableMoves = playerPiece.GetAvailableMoves(board);
         // Maybe Also get safeMoves(not threatened)
-        actionAvailable = true;
-        isActionPhaseActive = false;
-    }
-
-    private void OnActionPhaseComplete() {
-        isActionPhaseActive = false; // End action phase
-        EndTurn();
-    }
-
-
-    public bool IsActionAvailable() {
-        return actionAvailable;
     }
 
     private void EndTurn() {
-        turnManager.EndTurn();
+        turnManager.EndPlayerTurn();
     }
 }

@@ -37,7 +37,7 @@ public class EnemyManager : MonoBehaviour {
     public void StartEnemyTurn() {
         //TO DO: Each enemy piece should to An action
         AllTakeAction();
-        EndTurn();
+        StartCoroutine(TurnManager.Instance.StartActionPhase(true));
     }
 
     private void AllTakeAction() {
@@ -151,7 +151,7 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void EndTurn() {
-        turnManager.EndTurn();
+        turnManager.EndEnemyTurn();
     }
 
     public void PrintEnemyDict() {

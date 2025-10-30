@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +17,9 @@ public class Shotgun : Weapon
         float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         float halfArc = weaponData.fireArc / 2f;
 
+        int bulletsRemaining = weaponData.firePower;
+        TurnManager.Instance.RegisterAction(WaitForBulletsToFinish(() => bulletsRemaining == 0));
+
         for (int i = 0; i < weaponData.firePower; i++) {
             float randomAngle = UnityEngine.Random.Range(-halfArc, halfArc);
             Quaternion rotation = Quaternion.Euler(0, 0, baseAngle + randomAngle);
@@ -32,8 +36,21 @@ public class Shotgun : Weapon
                 bulletPool,
                 i
             );
+
+            //TO DO: Check if this method prevents memory leak
+            Action<Bullet> onFinish = null;
+            onFinish = (b) => {
+                bulletsRemaining--;
+                bullet.OnBulletFinished -= onFinish;
+            };
+            bullet.OnBulletFinished += onFinish;
         }
 
+    }
+
+    private IEnumerator WaitForBulletsToFinish(Func<bool> allDoneCondition) {
+        // TO DO: Is this the best placement for this IEnumerator?
+        yield return new WaitUntil(allDoneCondition);
     }
 
     public override void Aim(bool enable) {
