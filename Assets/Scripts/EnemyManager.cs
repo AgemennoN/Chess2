@@ -35,7 +35,6 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void StartEnemyTurn() {
-        PrintEnemyDict();
         AllTakeAction();
         StartCoroutine(TurnManager.Instance.StartActionPhase(true));
     }

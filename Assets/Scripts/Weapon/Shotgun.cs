@@ -8,8 +8,11 @@ public class Shotgun : Weapon
     //[SerializeField] private AimIndicator aimIndicator;
     //[SerializeField] private ArrowIndicator aimIndicator;
 
-    public override void Shoot(Vector3 from, Vector3 to) {
-        if (weaponData == null) return;
+    public override bool Shoot(Vector3 from, Vector3 to) {
+        bool isShooted = false;
+        if (weaponData == null) return isShooted;
+        if (currentMag == 0) return isShooted;
+        isShooted = true;
 
         Vector2 direction = (to - from);
         direction.Normalize();
@@ -46,6 +49,8 @@ public class Shotgun : Weapon
             bullet.OnBulletFinished += onFinish;
         }
 
+        currentMag -= 1;
+        return isShooted;
     }
 
     private IEnumerator WaitForBulletsToFinish(Func<bool> allDoneCondition) {
@@ -59,11 +64,6 @@ public class Shotgun : Weapon
         //} else {
         //    aimIndicator.Hide();
         //}
-        throw new System.NotImplementedException();
-    }
-
-
-    protected override void Reload() {
         throw new System.NotImplementedException();
     }
 }

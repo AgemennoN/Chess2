@@ -67,10 +67,12 @@ public class PlayerManager : MonoBehaviour {
             if (playerAvailableMoves.Contains(tile)) {
                 arrowIndicator.Hide();
                 MakeKingMovementTo(tile);
+                weapon.Reload();
                 StartCoroutine(TurnManager.Instance.StartActionPhase(true));
             } else if (tile != playerPiece.GetTile()) {
-                weapon.Shoot(playerPiece.transform.position, mouseWorldPos);
-                StartCoroutine(TurnManager.Instance.StartActionPhase(true));
+                if (weapon.Shoot(playerPiece.transform.position, mouseWorldPos)) {
+                    StartCoroutine(TurnManager.Instance.StartActionPhase(true));
+                }
             }
         }
 
