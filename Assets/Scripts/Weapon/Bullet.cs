@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour {
     }
 
     private void Update() {
-        transform.Translate(Vector3.up * speed * Time.deltaTime); // move forward
+        transform.Translate(Vector3.right * speed * Time.deltaTime); // move forward on X direction
 
         if (Vector3.Distance(startPosition, transform.position) > maxDistance) {
             ReturnToPool();
