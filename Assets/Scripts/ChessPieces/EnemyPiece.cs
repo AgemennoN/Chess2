@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyPiece : ChessPiece {
     [SerializeField] protected EnemyTypeSO enemyTypeSO;
-    //protected EnemyType enemyType;   TO DO: Not using right now
+    //protected EnemyType enemyType;   //TO DO: Not using right now
     [SerializeField] protected int maxHealth;
     [SerializeField] protected int currenHealth;
     [SerializeField] protected int speed; // Max cooldownToMove
@@ -17,6 +17,7 @@ public class EnemyPiece : ChessPiece {
     protected List<BoardTile> availableTiles;
     protected BoardTile[,] board;
 
+    public System.Action<EnemyPiece> OnDeath;
 
     private void Awake() {
         if (enemyTypeSO != null) {
@@ -90,7 +91,12 @@ public class EnemyPiece : ChessPiece {
     }
     private void Die() {
         // play death animation
+        OnDeath?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    public EnemyTypeSO GetEnemyTypeSO() {
+        return enemyTypeSO;
     }
 
 }

@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour {
         this.maxDistance = maxDistance;
         this.pool = pool;
         startPosition = transform.position;
-        Debug.Log($"BULLET_Initialize_{bulletNumberDebug}");
+        //Debug.Log($"BULLET_Initialize_{bulletNumberDebug}");
     }
 
     private void Update() {
@@ -37,7 +37,6 @@ public class Bullet : MonoBehaviour {
     }
 
     private void ReturnToPool() {
-        Debug.Log("BULLET_ReturnToPool");
         OnBulletFinished?.Invoke(this);
         pool.ReturnBullet(this.gameObject);
     }

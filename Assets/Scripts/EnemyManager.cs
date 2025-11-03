@@ -6,7 +6,7 @@ public class EnemyManager : MonoBehaviour {
     public static EnemyManager Instance { get; private set; }
 
     private Dictionary<EnemyType, int> enemyDictToCreate;
-    public Dictionary<EnemyType, List<GameObject>> enemyDict;
+    private Dictionary<EnemyType, List<GameObject>> enemyDict;
 
     private PieceFactory pieceFactory; 
     private BoardManager boardManager;
@@ -34,8 +34,8 @@ public class EnemyManager : MonoBehaviour {
         InitEnemyDict();
     }
 
-    public void StartEnemyTurn() {
-        //TO DO: Each enemy piece should to An action
+    private void StartEnemyTurn() {
+        PrintEnemyDict();
         AllTakeAction();
         StartCoroutine(TurnManager.Instance.StartActionPhase(true));
     }
@@ -113,7 +113,7 @@ public class EnemyManager : MonoBehaviour {
                         nextPieceType = placementQueue.Dequeue();
                         GameObject newPiece = pieceFactory.CreatePieceOnBoard(board, nextPieceType, col, row, transform);
 
-                        enemyDict[nextPieceType].Add(newPiece);
+                        RegisterToEnemyDict(nextPieceType, newPiece);
 
                         if (placementQueue.Count == 0) {
                             PrintEnemyDict();
@@ -124,6 +124,20 @@ public class EnemyManager : MonoBehaviour {
 
                 offset += 1f;
             }
+        }
+    }
+
+    private void RegisterToEnemyDict(EnemyType enemyType, GameObject newPieceObj) {
+        enemyDict[enemyType].Add(newPieceObj);
+
+        EnemyPiece newPiece = newPieceObj.GetComponent<EnemyPiece>();
+        newPiece.OnDeath += HandleEnemyDeath;
+    }
+
+    private void HandleEnemyDeath(EnemyPiece piece) {
+        piece.OnDeath -= HandleEnemyDeath;
+        if (enemyDict.TryGetValue(piece.GetEnemyTypeSO().enemyType, out var list)) {
+            list.Remove(piece.gameObject);
         }
     }
 

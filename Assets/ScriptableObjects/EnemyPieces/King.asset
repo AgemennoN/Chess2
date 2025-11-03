@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e5f043bb608c94f9e82fc3c900597f, type: 3}
   m_Name: King
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
-  enemyType: 1
+  enemyType: 5
   maxHealth: 5
   speed: 3
