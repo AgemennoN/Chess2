@@ -484,8 +484,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d007ad19d7c7466488e9a06b433e5fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardWidth: 8
+  boardHeight: 8
   blackTileSprite: {fileID: 21300000, guid: 497eeba990c8e824481a7e592efee1e6, type: 3}
   whiteTileSprite: {fileID: 21300000, guid: 04c94eba2105e694e8a770fdf83887e9, type: 3}
+  spriteScaleFactor: 4.5
 --- !u!4 &448760522
 Transform:
   m_ObjectHideFlags: 0

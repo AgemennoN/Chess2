@@ -1,68 +1,69 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class BoardManager : MonoBehaviour {
-
     public static BoardManager Instance { get; private set; }
-    private float tileSize = 1f;
-    private BoardTile[,] board = new BoardTile[8, 8];
+
+    public static BoardTile[,] Board { get; private set; }
+
+    [SerializeField] private int boardWidth = 8;
+    [SerializeField] private int boardHeight = 8;
     [SerializeField] private Sprite blackTileSprite;
     [SerializeField] private Sprite whiteTileSprite;
-
+    [SerializeField] private float spriteScaleFactor = 4.5f;
+    public int BoardWidth => boardWidth;
+    public int BoardHeight => boardHeight;
 
     private void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start() {
-    }
-
     public void Initialize() {
-        GenerateBoard(tileSize, 8, 8);
+        GenerateBoard();
     }
 
-    private void Update() {
-        // TO DO: Sil PrintBoard
-        if (Input.GetKeyDown(KeyCode.P)) {
-            PrintBoard();
-        }
-    }
+    private void GenerateBoard() {
+        if (Board != null)
+            return; // already generated Might destroy the Board Later DestroyBoard()
 
-    public Tile GetClosestAvailableTile(Tile tile) {
-        Tile closestAvailableTile = new Tile();
+        Board = new BoardTile[boardWidth, boardHeight];
 
-        // To DO: Might be used for spawning pieces but for now we will do king's right and left 
+        float tileWorldSize = blackTileSprite.bounds.size.x * spriteScaleFactor;
 
-        return closestAvailableTile;
-    }
+        // Calculate offset so board is centered
+        float offsetX = (boardWidth - 1) * tileWorldSize / 2f;
+        float offsetY = (boardHeight - 1) * tileWorldSize / 2f;
 
-    public bool IsTileEmtpy(int tileCountX, int tileCountY) {
-        return board[tileCountX, tileCountY].GetPiece() == null;
-    }
-    private void GenerateBoard(float tileSize, int tileCountX, int tileCountY) {
-        for (int x = 0; x < tileCountX; x++) {
-            for (int y = 0; y < tileCountY; y++) {
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
                 Sprite sprite = ((x + y) % 2 == 0) ? blackTileSprite : whiteTileSprite;
-                board[x, y] = BoardTile.Create(tileSize, x, y, sprite, null, gameObject);
+                Board[x, y] = BoardTile.Create(new Vector2Int(x, y), spriteScaleFactor, sprite, transform);
             }
         }
     }
 
-    public BoardTile[,] GetBoard() {
-        return board;
+    public bool IsTileEmpty(int x, int y) {
+        return Board[x, y].GetPiece() == null;
+    }
+
+    private void DestroyBoard() {
+        if (Board != null) {
+            // destroy old tiles
+            foreach (BoardTile tile in Board)
+                if (tile != null)
+                    Destroy(tile.gameObject);
+        }
     }
 
     public void PrintBoard() {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-
-                Debug.Log($"board[{x},{y}]: {board[x, y].GetPiece()}");
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
+                Debug.Log(Board[x, y].ToString());
             }
             Debug.LogWarning(" ");
         }

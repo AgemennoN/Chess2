@@ -8,7 +8,6 @@ public class TurnManager : MonoBehaviour {
 
     public event Action OnPlayerTurnStarted;
     public event Action OnEnemyTurnStarted;
-
     private enum TurnState { None, PlayerTurn, EnemyTurn, ActionPhase}
     private TurnState currentTurn = TurnState.None;
     private int roundNumber;
@@ -43,7 +42,6 @@ public class TurnManager : MonoBehaviour {
         Debug.Log($"--- Round {roundNumber}: Enemy Turn ---");
         OnEnemyTurnStarted?.Invoke();
     }
-
 
 
     // Actions the ActionPhase should wait for

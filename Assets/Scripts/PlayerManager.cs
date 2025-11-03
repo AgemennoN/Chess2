@@ -14,7 +14,6 @@ public class PlayerManager : MonoBehaviour {
 
     public PlayerPiece playerPiece; // TO DO Should be private to be more OOP
     public List<BoardTile> playerAvailableMoves; // TO DO Should be private to be more OOP
-    private BoardTile[,] board;
 
     private TurnManager turnManager;
 
@@ -30,7 +29,6 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void Initialize() {
-        board = BoardManager.Instance.GetBoard();
         turnManager = TurnManager.Instance;
 
         boardInputBroadcaster.OnTileHovered += HandleTileHover;
@@ -93,11 +91,11 @@ public class PlayerManager : MonoBehaviour {
             Destroy(obj);
             return;
         }
-        playerPiece.SetPosition(board[3, 0]);
+        playerPiece.SetPosition(BoardManager.Board[3, 0]);
     }
 
     private void StartPlayerTurn() {
-        playerAvailableMoves = playerPiece.GetAvailableMoves(board);
+        playerAvailableMoves = playerPiece.GetAvailableMoves(BoardManager.Board);
         // Maybe Also get safeMoves(not threatened)
     }
 

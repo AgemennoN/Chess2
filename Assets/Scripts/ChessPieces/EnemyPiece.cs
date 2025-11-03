@@ -7,48 +7,36 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyPiece : ChessPiece {
     [SerializeField] protected EnemyTypeSO enemyTypeSO;
-    //protected EnemyType enemyType;   //TO DO: Not using right now
-    [SerializeField] protected int maxHealth;
     [SerializeField] protected int currenHealth;
-    [SerializeField] protected int speed; // Max cooldownToMove
     [SerializeField] protected int cooldownToMove;
     [SerializeField] protected bool readyToMove = false;
 
     protected List<BoardTile> availableTiles;
-    protected BoardTile[,] board;
 
     public System.Action<EnemyPiece> OnDeath;
 
     private void Awake() {
         if (enemyTypeSO != null) {
-            maxHealth = enemyTypeSO.maxHealth;
-            currenHealth = maxHealth;
-            speed = enemyTypeSO.speed;
-            cooldownToMove = UnityEngine.Random.Range(2, speed + 1);
+            currenHealth = enemyTypeSO.maxHealth;
+            cooldownToMove = UnityEngine.Random.Range(2, enemyTypeSO.speed + 1);
 
-            //enemyType = enemyTypeSO.enemyType; TO DO Not using right now
         }
     }
 
-    private void Start() {
-        board = BoardManager.Instance.GetBoard();
-    }
-
-    // Virtual methods to be overridden in derived piece classes
     public void TakeAction() {
         if (cooldownToMove > 1) {
             ReduceCooldown();
         } 
         if (cooldownToMove == 1) {
-            availableTiles = GetAvailableMoves(board);
+            availableTiles = GetAvailableMoves(BoardManager.Board);
             if (availableTiles.Count != 0) {
                 if (cooldownToMove == 1 && readyToMove == false) {
                     GetReadyToMove();
                 } else { // Stop Shaking and MOVE
                     StopReadyingToMove();
                     MoveToPosition(DecideMovementTile(availableTiles));
-                    cooldownToMove = speed; // Reset Cooldown
-                    Debug.Log($"GameObject {gameObject.name} Taking Action maxHealth: {maxHealth}, speed: {speed}");
+                    cooldownToMove = enemyTypeSO.speed; // Reset Cooldown
+                    Debug.Log($"GameObject {gameObject.name} Taking Action maxHealth: {enemyTypeSO.maxHealth}, speed: {enemyTypeSO.speed}");
                     
                 }
             } else { // No Available Movement
@@ -73,7 +61,7 @@ public class EnemyPiece : ChessPiece {
         // Stop shaking animation
     }
 
-    private BoardTile DecideMovementTile(List<BoardTile> availableTiles) {
+    protected virtual BoardTile DecideMovementTile(List<BoardTile> availableTiles) {
         if (availableTiles.Count > 0) {
             int randomIndex = UnityEngine.Random.Range(0, availableTiles.Count);
             BoardTile randomTile = availableTiles[randomIndex];

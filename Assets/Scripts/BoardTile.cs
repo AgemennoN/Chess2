@@ -1,74 +1,67 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class BoardTile : MonoBehaviour {
     
-    public static BoardTile Create(float tileSize, int GridPositionX, int GridPositionY, Sprite sprite, ChessPiece chessPiece=null, GameObject parent=null) {
-        GameObject tileObject = new GameObject($"Tile_{GridPositionX}_{GridPositionY}");
-        BoardTile tile = tileObject.AddComponent<BoardTile>();
-        tile.GridPositionX = GridPositionX;
-        tile.GridPositionY = GridPositionY;
-        tile.tileSize = tileSize;
+    public static BoardTile Create(Vector2Int gridPos, float spriteScaleFactor, Sprite sprite, Transform parent = null) {
+        GameObject obj = new GameObject($"Tile_{gridPos.x}_{gridPos.y}");
+        BoardTile tile = obj.AddComponent<BoardTile>();
 
-        tile.CreateSprite(sprite);
+        tile.gridPositionX = gridPos.x;
+        tile.gridPositionY = gridPos.y;
+
+        tile.SetWorldPosition(sprite, spriteScaleFactor);
+        tile.CreateSprite(sprite, spriteScaleFactor);
         tile.gameObject.layer = LayerMask.NameToLayer("BoardTileLayer"); // TO DO: Using string is sad
         tile.CreateCollider();
 
-        tile.SetPosition();
-        tile.SetPiece(chessPiece);
-        if (chessPiece != null) {
-            chessPiece.SetPosition(tile);
-        }
-        if (parent != null) {
-            tile.transform.SetParent(parent.transform);
-        }
+
+        if (parent != null)
+            tile.transform.SetParent(parent, false);
 
         return tile;
     }
 
-    private int GridPositionX;
-    private int GridPositionY;
-    private float tileSize;
+    private int gridPositionX;
+    private int gridPositionY;
+
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
     private PlayerManager playerManager;
-    public ChessPiece pieceOnIt; // TO DO: Should it be public? Or is there a better option to be more OOP
+    private ChessPiece pieceOnIt;
 
-    private void Start() {
-        playerManager = PlayerManager.Instance;
-    }
-
+    public Vector2Int GridPosition => new Vector2Int(gridPositionX, gridPositionY);
     public ChessPiece GetPiece() => pieceOnIt;
 
-        public void SetPiece(ChessPiece piece) {
+    public void SetPiece(ChessPiece piece) {
         pieceOnIt = piece;
     }
 
-    private void SetPosition() {
-        // To do (minor): instead of using a constant as -4 get board size and use -BoardSize/2
-        float worldPositionX = (-4 + GridPositionX) * tileSize + tileSize/2;
-        float worldPositionY = (-4 + GridPositionY) * tileSize + tileSize/2;
-        transform.position = new Vector3(worldPositionX, worldPositionY, 0);
+    private void SetWorldPosition(Sprite sprite, float spriteScaleFactor) {
+        float tileWorldSize = sprite.bounds.size.x * spriteScaleFactor;
+        float offsetX = (BoardManager.Instance.BoardWidth - 1) * tileWorldSize / 2f;
+        float offsetY = (BoardManager.Instance.BoardHeight - 1) * tileWorldSize / 2f;
+        transform.position = new Vector3(
+            gridPositionX * tileWorldSize - offsetX,
+            gridPositionY * tileWorldSize - offsetY,
+            0
+        );
     }
 
-    public Vector2Int GetGridPosition() {
-        return new Vector2Int(GridPositionX, GridPositionY);
-    }
-
-    private void CreateSprite(Sprite sprite) {
+    private void CreateSprite(Sprite sprite, float spriteScaleFactor) {
         spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
         spriteRenderer.sortingLayerName = "ChessBoard";
-        transform.localScale = new Vector3(4.5f, 4.5f);
+        transform.localScale = Vector3.one * spriteScaleFactor;
     }
 
     private void CreateCollider() {
         boxCollider = gameObject.AddComponent<BoxCollider2D>();
 
-        Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
-        Vector2 worldSize = new Vector2(spriteSize.x * transform.localScale.x, spriteSize.y * transform.localScale.y);
-        boxCollider.size = spriteSize;
-        boxCollider.offset = spriteRenderer.sprite.bounds.center;
+        Bounds spriteBounds = spriteRenderer.sprite.bounds;
+        boxCollider.size = spriteBounds.size;
+        boxCollider.offset = spriteBounds.center;
     }
 
 }

@@ -10,7 +10,6 @@ public class EnemyManager : MonoBehaviour {
 
     private PieceFactory pieceFactory; 
     private BoardManager boardManager;
-    private BoardTile[,] board;
     private TurnManager turnManager;
 
     private void Awake() {
@@ -30,7 +29,6 @@ public class EnemyManager : MonoBehaviour {
 
         turnManager.OnEnemyTurnStarted += StartEnemyTurn;
 
-        board = boardManager.GetBoard();
         InitEnemyDict();
     }
 
@@ -102,7 +100,7 @@ public class EnemyManager : MonoBehaviour {
                     if (col < 0 || col >= 8)
                         continue;
 
-                    if (board[col, row].pieceOnIt == null) {
+                    if (BoardManager.Board[col, row].GetPiece() == null) {
                         EnemyType nextPieceType = placementQueue.Peek();
 
                         // Pawns can't go on row 7
@@ -110,7 +108,7 @@ public class EnemyManager : MonoBehaviour {
                             continue;
 
                         nextPieceType = placementQueue.Dequeue();
-                        GameObject newPiece = pieceFactory.CreatePieceOnBoard(board, nextPieceType, col, row, transform);
+                        GameObject newPiece = pieceFactory.CreatePieceOnBoard(BoardManager.Board, nextPieceType, col, row, transform);
 
                         RegisterToEnemyDict(nextPieceType, newPiece);
 
