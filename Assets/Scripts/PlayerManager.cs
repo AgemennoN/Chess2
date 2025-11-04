@@ -63,14 +63,23 @@ public class PlayerManager : MonoBehaviour {
 
         if (tile != null) {
             if (playerAvailableMoves.Contains(tile)) {
-                arrowIndicator.Hide();
-                MakeKingMovementTo(tile);
-                weapon.Reload();
-                StartCoroutine(TurnManager.Instance.StartActionPhase(true));
-            } else if (tile != playerPiece.GetTile()) {
-                if (weapon.Shoot(playerPiece.transform.position, mouseWorldPos)) {
-                    StartCoroutine(TurnManager.Instance.StartActionPhase(true));
+                if (IsTileSafe(tile)) {
+                    arrowIndicator.Hide();
+                    MakeKingMovementTo(tile);
+                    weapon.Reload(); // Reload logic done inside weapon
+                    StartCoroutine(TurnManager.Instance.StartActionPhase(true));        // When all the registered coroutines end, End Turn
+                } else {
+                    Debug.Log($"TILE: {tile} IS NOT SAFE to MOVE there");
                 }
+            } else if (tile != playerPiece.GetTile()) {
+                if (IsTileSafe(GetPlayersTile())) {
+                    if (weapon.Shoot(playerPiece.transform.position, mouseWorldPos)) {
+                        StartCoroutine(TurnManager.Instance.StartActionPhase(true));    // When all the registered coroutines end, End Turn
+                    }
+                } else {
+                    Debug.Log($"TILE: {tile} IS NOT SAFE to STAY and Shoot");
+                }
+
             }
         }
 
@@ -95,8 +104,18 @@ public class PlayerManager : MonoBehaviour {
     }
 
     private void StartPlayerTurn() {
-        playerAvailableMoves = playerPiece.GetAvailableMoves(BoardManager.Board);
+        playerPiece.UpdateAvailableTiles(BoardManager.Board);
+        playerAvailableMoves = playerPiece.GetAvailableTiles();
         // Maybe Also get safeMoves(not threatened)
+    }
+
+    private bool IsTileSafe(BoardTile tile) {
+        EnemyPiece enemyPiece = EnemyManager.Instance.IsTileInThreatened(tile);
+        return enemyPiece == null;
+    }
+
+    public BoardTile GetPlayersTile() {
+        return playerPiece.GetTile();
     }
 
     private void EndTurn() {

@@ -5,6 +5,8 @@ using UnityEngine;
 public class ChessPiece : MonoBehaviour {
 
     protected BoardTile currentTile;
+    [SerializeField] protected List<BoardTile> availableTiles;
+    [SerializeField] protected List<BoardTile> threatenedTiles;
 
     public void SetPosition(BoardTile tile) {
         if (currentTile != null) {
@@ -44,11 +46,16 @@ public class ChessPiece : MonoBehaviour {
     public BoardTile GetTile() { return currentTile; }
 
     // Virtual methods to be overridden in derived piece classes
-    public virtual List<BoardTile> GetAvailableMoves(BoardTile[,] board) {
-        return new List<BoardTile>();
+    public virtual void UpdateAvailableTiles(BoardTile[,] board) {
     }
 
-    public virtual List<BoardTile> GetThreatenedTiles(BoardTile[,] board) {
-        return new List<BoardTile>();
+    public virtual void UpdateThreatenedTiles(BoardTile[,] board) {
+    }
+
+    public virtual List<BoardTile> GetAvailableTiles() {
+        return availableTiles;
+    }
+    public virtual List<BoardTile> GetThreatenedTiles() {
+        return threatenedTiles;
     }
 }

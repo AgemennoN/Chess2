@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class PlayerPiece : ChessPiece
 {
-    public override List<BoardTile> GetAvailableMoves(BoardTile[,] board) {
-        List<BoardTile> tiles = new List<BoardTile>();
+    
+    public override void UpdateAvailableTiles(BoardTile[,] board) {
+        availableTiles = new List<BoardTile>();
 
         Vector2Int currentGridPosition = currentTile.GridPosition;
 
@@ -21,12 +22,10 @@ public class PlayerPiece : ChessPiece
                 // Bounds check
                 if (newX >= 0 && newX < board.GetLength(0) && newY >= 0 && newY < board.GetLength(1)) {
                     if (board[newX,newY].GetPiece() == null)
-                        tiles.Add(board[newX, newY]);
+                        availableTiles.Add(board[newX, newY]);
                 }
             }
         }
-
-        return tiles;
     }
 
 

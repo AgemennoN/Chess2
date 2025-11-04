@@ -40,3 +40,5 @@ MonoBehaviour:
   - direction: {x: -1, y: -2}
     movementType: 2
     maxDistance: 0
+  isThreatSameWithMovement: 1
+  threatPatterns: []

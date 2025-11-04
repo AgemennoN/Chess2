@@ -12,6 +12,16 @@ public class EnemyManager : MonoBehaviour {
     private BoardManager boardManager;
     private TurnManager turnManager;
 
+    private EnemyType[] executionOrder =
+        {
+            EnemyType.Pawn,
+            EnemyType.King,
+            EnemyType.Queen,
+            EnemyType.Bishop,
+            EnemyType.Rook,
+            EnemyType.Knight
+        };
+
     private void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
@@ -33,22 +43,62 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void StartEnemyTurn() {
+        IsEnemyKingAliveControl();
+        
+        AllCheckControl();
+
         AllTakeAction();
+
+        AllCheckControl();
         StartCoroutine(TurnManager.Instance.StartActionPhase(true));
     }
 
-    private void AllTakeAction() {
-        // Define the order manually
-        EnemyType[] executionOrder =
-        {
-            EnemyType.Pawn,
-            EnemyType.King,
-            EnemyType.Queen,
-            EnemyType.Bishop,
-            EnemyType.Rook,
-            EnemyType.Knight
-        };
+    private void AllCheckControl() {
+        // All pieces should check if they are Checking the Player's king before taking action
+        foreach (EnemyType type in executionOrder) {
+            if (!enemyDict.ContainsKey(type))
+                continue;
 
+            foreach (GameObject enemy in enemyDict[type]) {
+                if (enemy == null) continue;
+
+                EnemyPiece piece = enemy.GetComponent<EnemyPiece>();
+                if (piece != null) {
+                    piece.CheckControl();
+                } else
+                    Debug.LogWarning($"GameObject {enemy.name} has no EnemyPiece component.");
+            }
+        }
+    }
+
+    public EnemyPiece IsTileInThreatened(BoardTile tile) {
+        // Iterate through the order and call IsTileIsInThreatened() on each
+        bool inThreat = false;
+        foreach (EnemyType type in executionOrder) {
+            if (!enemyDict.ContainsKey(type))
+                continue;
+
+            foreach (GameObject enemy in enemyDict[type]) {
+                if (enemy == null) continue;
+
+                EnemyPiece piece = enemy.GetComponent<EnemyPiece>();
+                if (piece != null) {
+                    inThreat = piece.IsTileIsInThreatened(tile);
+                    if (inThreat) return piece; ;
+                }
+                else
+                    Debug.LogWarning($"GameObject {enemy.name} has no EnemyPiece component.");
+            }
+        }
+        return null;
+    }
+
+    private bool IsEnemyKingAliveControl() {
+        // Check if there is any King left in the dictionary if not the stage will end
+        return true;
+    }
+
+    private void AllTakeAction() {
         // Iterate through the order and call TakeAction() on each
         foreach (EnemyType type in executionOrder) {
             if (!enemyDict.ContainsKey(type))

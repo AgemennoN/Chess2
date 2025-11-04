@@ -11,8 +11,6 @@ public class EnemyPiece : ChessPiece {
     [SerializeField] protected int cooldownToMove;
     [SerializeField] protected bool readyToMove = false;
 
-    [SerializeField] protected List<BoardTile> availableTiles;
-
     public System.Action<EnemyPiece> OnDeath;
 
     private void Awake() {
@@ -23,12 +21,22 @@ public class EnemyPiece : ChessPiece {
         }
     }
 
+    public void CheckControl() {
+        UpdateThreatenedTiles(BoardManager.Board);
+
+        IsTileIsInThreatened(PlayerManager.Instance.GetPlayersTile());
+    }
+
+    public bool IsTileIsInThreatened(BoardTile tile) {
+        return threatenedTiles.Contains(tile);
+    }
+
     public void TakeAction() {
         if (cooldownToMove > 1) {
             ReduceCooldown();
         } 
         if (cooldownToMove == 1) {
-            availableTiles = GetAvailableMoves(BoardManager.Board);
+            UpdateAvailableTiles(BoardManager.Board);
             if (availableTiles.Count != 0) {
                 if (cooldownToMove == 1 && readyToMove == false) {
                     GetReadyToMove();
@@ -61,42 +69,56 @@ public class EnemyPiece : ChessPiece {
         // Stop shaking animation
     }
     
-    public override List<BoardTile> GetAvailableMoves(BoardTile[,] board) {
-        List<BoardTile> availableTiles = new List<BoardTile>();
+    public override void UpdateAvailableTiles(BoardTile[,] board) {
+        availableTiles = GetTilesFromPatternList(board, enemyTypeSO.movementPatterns, false);
+    }
+
+    public override void UpdateThreatenedTiles(BoardTile[,] board) {
+        threatenedTiles = new List<BoardTile>();
+
+        var patterns = enemyTypeSO.isThreatSameWithMovement
+            ? enemyTypeSO.movementPatterns
+            : enemyTypeSO.threatPatterns;
+
+        threatenedTiles = GetTilesFromPatternList(board, patterns, true);
+    }
+
+    private List<BoardTile> GetTilesFromPatternList(BoardTile[,] board, List<MovementPattern> patterns, bool canCapture) {
+        List<BoardTile> tiles = new List<BoardTile>();
 
         Vector2Int currentPos = currentTile.GridPosition;
 
-        foreach (var pattern in enemyTypeSO.movementPatterns) {
+        foreach (MovementPattern pattern in patterns) {
             switch (pattern.movementType) {
                 case MovementType.Jump:
-                    HandleJumpMove(board, currentPos, pattern, availableTiles);
+                    HandleJumpMove(board, currentPos, pattern, tiles, canCapture);
                     break;
 
                 case MovementType.FiniteStep:
-                    HandleFiniteStepMove(board, currentPos, pattern, availableTiles);
+                    HandleFiniteStepMove(board, currentPos, pattern, tiles, canCapture);
                     break;
 
                 case MovementType.InfiniteStep:
-                    HandleInfiniteStepMove(board, currentPos, pattern, availableTiles);
+                    HandleInfiniteStepMove(board, currentPos, pattern, tiles, canCapture);
                     break;
             }
         }
-
-        return availableTiles;
+        return tiles;
     }
 
-    private void HandleJumpMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles) {
+    private void HandleJumpMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles, bool canCapture) {
         Vector2Int targetPos = currentPos + pattern.direction;
 
         if (!BoardManager.IsInsideBounds(targetPos))
             return;
 
         BoardTile targetTile = board[targetPos.x, targetPos.y];
-        if (targetTile.GetPiece() == null)
+        ChessPiece pieceOnTheTile = targetTile.GetPiece();
+        if (pieceOnTheTile == null || (pieceOnTheTile is PlayerPiece && canCapture))
             availableTiles.Add(targetTile);
     }
 
-    private void HandleFiniteStepMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles) {
+    private void HandleFiniteStepMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles, bool canCapture) {
         for (int step = 1; step <= pattern.maxDistance; step++) {
             Vector2Int targetPos = currentPos + pattern.direction * step;
 
@@ -104,18 +126,22 @@ public class EnemyPiece : ChessPiece {
                 break;
 
             BoardTile targetTile = board[targetPos.x, targetPos.y];
-            var piece = targetTile.GetPiece();
+            ChessPiece pieceOnTheTile = targetTile.GetPiece();
 
-            if (piece == null) {
+            if (pieceOnTheTile == null) {
                 availableTiles.Add(targetTile);
             } else {
+                if (pieceOnTheTile is PlayerPiece && canCapture) {
+                    // PlayerPiece can be captured so the tile is available
+                    availableTiles.Add(targetTile);
+                }
                 // Stop if blocked by another piece
                 break;
             }
         }
     }
 
-    private void HandleInfiniteStepMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles) {
+    private void HandleInfiniteStepMove(BoardTile[,] board, Vector2Int currentPos, MovementPattern pattern, List<BoardTile> availableTiles, bool canCapture) {
         for (int step = 1; ; step++) {
             Vector2Int targetPos = currentPos + pattern.direction * step;
 
@@ -123,11 +149,15 @@ public class EnemyPiece : ChessPiece {
                 break;
 
             BoardTile targetTile = board[targetPos.x, targetPos.y];
-            var piece = targetTile.GetPiece();
+            ChessPiece pieceOnTheTile = targetTile.GetPiece();
 
-            if (piece == null) {
+            if (pieceOnTheTile == null) {
                 availableTiles.Add(targetTile);
             } else {
+                if (pieceOnTheTile is PlayerPiece && canCapture) {
+                    // PlayerPiece can be captured so the tile is available
+                    availableTiles.Add(targetTile);
+                }
                 // Stop if blocked by another piece
                 break;
             }
@@ -150,6 +180,7 @@ public class EnemyPiece : ChessPiece {
             Die();
         }
     }
+    
     private void Die() {
         // play death animation
         OnDeath?.Invoke(this);

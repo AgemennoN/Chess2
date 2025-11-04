@@ -23,4 +23,7 @@ public class EnemyTypeSO : ScriptableObject
     public int speed;
 
     public List<MovementPattern> movementPatterns;
+    public bool isThreatSameWithMovement = false;
+    public List<MovementPattern> threatPatterns;
+
 }
