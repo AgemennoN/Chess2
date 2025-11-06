@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -64,6 +65,27 @@ public class BoardManager : MonoBehaviour {
     public static bool IsInsideBounds(Vector2Int pos) {
         return pos.x >= 0 && pos.x < Board.GetLength(0) &&
                pos.y >= 0 && pos.y < Board.GetLength(1);
+    }
+
+    public static int GetManhattanDistance(BoardTile fromTile, BoardTile toTile) {
+        Vector2Int from = fromTile.GridPosition;
+        Vector2Int to = toTile.GridPosition;
+        return Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
+    }
+
+    public static BoardTile GetClosestTileToTargetTile(List<BoardTile> tiles, BoardTile targetTile) {
+        BoardTile closest = null;
+        int minDist = int.MaxValue;
+
+        foreach (var tile in tiles) {
+            int dist = GetManhattanDistance(tile, targetTile);
+            if (dist < minDist) {
+                minDist = dist;
+                closest = tile;
+            }
+        }
+
+        return closest;
     }
 
     public void PrintBoard() {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rook
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 3
-  maxHealth: 4
+  maxHealth: 5
   speed: 4
   movementPatterns:
   - direction: {x: 1, y: 0}

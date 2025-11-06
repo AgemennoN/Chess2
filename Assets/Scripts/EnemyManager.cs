@@ -120,7 +120,7 @@ public class EnemyManager : MonoBehaviour {
         enemyDictToCreate = new Dictionary<EnemyType, int>();
 
         enemyDictToCreate.Add(EnemyType.King, 1);
-        enemyDictToCreate.Add(EnemyType.Queen, 1);
+        enemyDictToCreate.Add(EnemyType.Queen, 0);
         enemyDictToCreate.Add(EnemyType.Rook, 1);
         enemyDictToCreate.Add(EnemyType.Bishop, 1);
         enemyDictToCreate.Add(EnemyType.Knight, 1);

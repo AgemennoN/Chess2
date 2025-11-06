@@ -13,7 +13,6 @@ public class EnemyPiece : ChessPiece {
     [SerializeField] protected int cooldownToMove;
     [SerializeField] protected bool readyToMove = false;
 
-
     [SerializeField] private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
@@ -90,23 +89,23 @@ public class EnemyPiece : ChessPiece {
     }
     
     public override void UpdateAvailableTiles(BoardTile[,] board) {
-        availableTiles = GetTilesFromPatternList(board, enemyTypeSO.movementPatterns, false);
+        Vector2Int currentPos = currentTile.GridPosition;
+        availableTiles = GetTilesFromPatternList(board, currentPos, enemyTypeSO.movementPatterns, false);
     }
 
     public override void UpdateThreatenedTiles(BoardTile[,] board) {
         threatenedTiles = new List<BoardTile>();
 
-        var patterns = enemyTypeSO.isThreatSameWithMovement
+        List<MovementPattern> patterns = enemyTypeSO.isThreatSameWithMovement
             ? enemyTypeSO.movementPatterns
             : enemyTypeSO.threatPatterns;
 
-        threatenedTiles = GetTilesFromPatternList(board, patterns, true);
+        Vector2Int currentPos = currentTile.GridPosition;
+        threatenedTiles = GetTilesFromPatternList(board, currentPos, patterns, true);
     }
 
-    private List<BoardTile> GetTilesFromPatternList(BoardTile[,] board, List<MovementPattern> patterns, bool canCapture) {
+    private List<BoardTile> GetTilesFromPatternList(BoardTile[,] board, Vector2Int currentPos, List<MovementPattern> patterns, bool canCapture) {
         List<BoardTile> tiles = new List<BoardTile>();
-
-        Vector2Int currentPos = currentTile.GridPosition;
 
         foreach (MovementPattern pattern in patterns) {
             switch (pattern.movementType) {
@@ -187,13 +186,46 @@ public class EnemyPiece : ChessPiece {
     }
 
     protected virtual BoardTile DecideMovementTile(List<BoardTile> availableTiles) {
-        if (availableTiles.Count > 0) {
-            int randomIndex = UnityEngine.Random.Range(0, availableTiles.Count);
-            BoardTile randomTile = availableTiles[randomIndex];
-            return randomTile;
+        if (availableTiles.Count > 1) {
+            List<BoardTile> checkingTiles = new List<BoardTile>();
+            BoardTile playerTile = PlayerManager.Instance.GetPlayersTile();
+            
+            foreach (BoardTile tile in availableTiles) {
+                if (WouldThreatenTargetTileFrom(BoardManager.Board, tile, playerTile)){
+                    checkingTiles.Add(tile);
+                }
+            }
+
+            BoardTile targetTileToMove = currentTile;
+            if (checkingTiles.Count > 0) {
+                targetTileToMove = BoardManager.GetClosestTileToTargetTile(checkingTiles, playerTile);
+            } else {
+                targetTileToMove = BoardManager.GetClosestTileToTargetTile(availableTiles, playerTile);
+            }
+            return targetTileToMove;
+
+        } else if (availableTiles.Count == 1) {
+            return availableTiles[0];
         } else {
+            // TO DO: try expect ile yap burayi düzgün bir log bastir. zaten olduðu kareyi dönsün
+            Debug.Log("AvailableTiles are empty");
             return null;
         }
+    }
+
+    protected virtual bool WouldThreatenTargetTileFrom(BoardTile[,] board, BoardTile fromTile, BoardTile targetTile) {
+        // Temporarily imagine the enemy moved to that tile:
+        List<BoardTile> threatenedTiles = new List<BoardTile>();
+
+        List<MovementPattern> patterns = enemyTypeSO.isThreatSameWithMovement
+            ? enemyTypeSO.movementPatterns
+            : enemyTypeSO.threatPatterns;
+
+        threatenedTiles = GetTilesFromPatternList(board, fromTile.GridPosition, patterns, true);
+
+        if (threatenedTiles.Contains(targetTile))
+            return true;
+        return false;
     }
 
     public void TakeDamage(int amount) {
