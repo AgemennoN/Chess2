@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Multiplayer.Center.Common;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,22 +10,25 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyPiece : ChessPiece {
     [SerializeField] protected EnemyTypeSO enemyTypeSO;
-    [SerializeField] protected int currenHealth;
+    [SerializeField] protected int currentHealth;
     [SerializeField] protected int cooldownToMove;
     [SerializeField] protected bool readyToMove = false;
 
     [SerializeField] private VisualEffects visualEffects;
 
+    private Coroutine damageCoroutine;
+    private int pendingDamage;
     public System.Action<EnemyPiece> OnDeath;
+
 
     private void Awake() {
         if (enemyTypeSO != null) {
-            currenHealth = enemyTypeSO.maxHealth;
+            currentHealth = enemyTypeSO.maxHealth;
             cooldownToMove = UnityEngine.Random.Range(2, enemyTypeSO.speed + 1);
         }
         
         if (visualEffects == null) {
-            visualEffects = GetComponentInChildren<VisualEffects>();
+            visualEffects = GetComponent<VisualEffects>();
         }
     }
 
@@ -226,10 +230,29 @@ public class EnemyPiece : ChessPiece {
     }
 
     public void TakeDamage(int amount) {
-        currenHealth -= amount;
-        if (currenHealth <= 0) {
+        pendingDamage += amount;
+        if (damageCoroutine == null) {
+            damageCoroutine = StartCoroutine(TakePendingDamage(0.1f));
+            TurnManager.Instance.RegisterAction(TimeToHandleDamage(0.5f));
+            visualEffects.Flicker(Color.red, 0.1f, 2);
+        }
+
+        if (currentHealth - pendingDamage <= 0) {
+            StopAllCoroutines();
             Die();
         }
+    }
+
+    private IEnumerator TakePendingDamage(float time) {
+        yield return new WaitForSeconds(time);
+        visualEffects.ShowDamage(pendingDamage);
+        currentHealth -= pendingDamage;
+        pendingDamage = 0;
+        damageCoroutine = null;
+    }
+
+    private IEnumerator TimeToHandleDamage(float time) {
+        yield return new WaitForSeconds(time);
     }
     
     private void Die() {

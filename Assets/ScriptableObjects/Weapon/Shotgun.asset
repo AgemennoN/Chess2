@@ -16,7 +16,7 @@ MonoBehaviour:
   fireMaxRange: 5
   fireMinRange: 3
   fireArc: 57
-  bulletSpeed: 20
+  bulletSpeed: 10
   bulletDamage: 1
   magCapacity: 1
   maxReserveAmmo: 4
