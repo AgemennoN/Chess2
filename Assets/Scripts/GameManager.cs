@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
 
     public void StartGame() {
         playerManager.SpawnPlayer();
-        enemyManager.SpawnEnemies();
+        enemyManager.SpawnEnemyDictOfTheMap();
         
         turnManager.GameStart();
     }

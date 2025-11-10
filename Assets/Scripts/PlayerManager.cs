@@ -88,7 +88,7 @@ public class PlayerManager : MonoBehaviour {
 
     private void MakeKingMovementTo(BoardTile tile) {
         if (playerAvailableMoves.Contains(tile)) {
-            playerPiece.MoveToPosition(tile); // Pass callback
+            playerPiece.MoveToPosition(tile);
         }
     }
 

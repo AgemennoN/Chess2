@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class VisualEffects : MonoBehaviour {
 
-    [SerializeField] private EnemyPiece enemyPiece;
-
     [Header("Sprite Effects")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     private Vector3 originalSpriteLocalPos;
@@ -34,8 +32,6 @@ public class VisualEffects : MonoBehaviour {
         }
         textMesh.enabled = false;
 
-        enemyPiece = GetComponent<EnemyPiece>();
-        enemyPiece.OnDeath += DeathAnimation;
     }
 
     public void StartShake(float intensity = 0.035f, float speed = 30f) {
@@ -59,8 +55,12 @@ public class VisualEffects : MonoBehaviour {
         }
     }
 
-    public Coroutine Flicker(Color flickerColor, float flickerDuration, int flickerCount) {
-        return StartCoroutine(FlickerRoutine(flickerColor, flickerDuration, flickerCount));
+    public void Flicker(Color flickerColor, float flickerDuration, int flickerCount, bool register=false) {
+        if (register) {
+            TurnManager.Instance.RegisterAction(FlickerRoutine(flickerColor, flickerDuration, flickerCount));
+        } else {
+            StartCoroutine(FlickerRoutine(flickerColor, flickerDuration, flickerCount));
+        }
     }
 
     public IEnumerator FlickerRoutine(Color flickerColor, float flickerDuration, int flickerCount) {
@@ -103,23 +103,39 @@ public class VisualEffects : MonoBehaviour {
         textMesh.enabled = false;
     }
 
-    private void DeathAnimation(EnemyPiece enemyPiece) {
-        StartCoroutine(DeathAnimationRoutine(enemyPiece));
+    public void SpriteFadeOutAnimation(float fadeDuration = 1f, bool register = false) {
+        if (register) {
+            TurnManager.Instance.RegisterAction(SpriteFadeOutAnimationRoutine(fadeDuration));
+        } else {
+            StartCoroutine(SpriteFadeOutAnimationRoutine(fadeDuration));
+        }
     }
 
-    private IEnumerator DeathAnimationRoutine(EnemyPiece enemyPiece) {
-
+    private IEnumerator SpriteFadeOutAnimationRoutine(float fadeDuration = 1f) {
         float elapsed = 0f;
-        float spriteFadeDuration = 1f;
-        
-        while (elapsed < spriteFadeDuration) {
+        while (elapsed < fadeDuration) {
             elapsed += Time.deltaTime;
-            float t = elapsed / textFadeDuration;
+            float t = elapsed / fadeDuration;
             spriteRenderer.color = new Color(originalSpriteColor.r, originalSpriteColor.g, originalSpriteColor.b, 1 - t);
             yield return null;
         }
+    }
 
-        // TO DO: DESTROY ON THE ANIMATION SCRIPT?????????????????????????? FIX IT
-        Destroy(enemyPiece.gameObject);
+    public void SpriteFadeInAnimation(float fadeDuration = 1f, bool register=false) {
+        if (register) {
+            TurnManager.Instance.RegisterAction(SpriteFadeInAnimationRoutine(fadeDuration));
+        } else {
+            StartCoroutine(SpriteFadeInAnimationRoutine(fadeDuration));
+        }
+    }
+
+    private IEnumerator SpriteFadeInAnimationRoutine(float fadeDuration = 1f) {
+        float elapsed = 0f;
+        while (elapsed < fadeDuration) {
+            elapsed += Time.deltaTime;
+            float t = elapsed / fadeDuration;
+            spriteRenderer.color = new Color(originalSpriteColor.r, originalSpriteColor.g, originalSpriteColor.b, t);
+            yield return null;
+        }
     }
 }

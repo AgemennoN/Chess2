@@ -14,7 +14,7 @@ public class EnemyPiece : ChessPiece {
     [SerializeField] protected int cooldownToMove;
     [SerializeField] protected bool readyToMove = false;
 
-    [SerializeField] private VisualEffects visualEffects;
+    [SerializeField] protected VisualEffects visualEffects;
 
     private Coroutine damageCoroutine;
     private int pendingDamage;
@@ -56,7 +56,7 @@ public class EnemyPiece : ChessPiece {
         return inThreat;
     }
 
-    public void TakeAction() {
+    public virtual void TakeAction() {
         if (cooldownToMove > 1) {
             ReduceCooldown();
         } 
@@ -69,8 +69,6 @@ public class EnemyPiece : ChessPiece {
                     StopReadyingToMove();
                     MoveToPosition(DecideMovementTile(availableTiles));
                     cooldownToMove = enemyTypeSO.speed; // Reset Cooldown
-                    Debug.Log($"GameObject {gameObject.name} Taking Action maxHealth: {enemyTypeSO.maxHealth}, speed: {enemyTypeSO.speed}");
-                    
                 }
             } else { // No Available Movement
                 if (readyToMove == true) {
@@ -238,8 +236,7 @@ public class EnemyPiece : ChessPiece {
         pendingDamage += amount;
         if (damageCoroutine == null) {
             damageCoroutine = StartCoroutine(TakePendingDamage(0.1f));
-            TurnManager.Instance.RegisterAction(TimeToHandleDamage(0.5f));
-            visualEffects.Flicker(Color.red, 0.1f, 2);
+            visualEffects.Flicker(Color.red, 0.1f, 2, true);
         }
 
         if (currentHealth - pendingDamage <= 0) {
@@ -255,20 +252,22 @@ public class EnemyPiece : ChessPiece {
         pendingDamage = 0;
         damageCoroutine = null;
     }
-
-    private IEnumerator TimeToHandleDamage(float time) {
-        yield return new WaitForSeconds(time);
-    }
-    
-    private void Die() {
+    protected void Die() {
         if (IsDead) return;
         IsDead = true;
-        // play death animation
+
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = false;
 
         currentTile.SetPiece(null);
+        visualEffects.SpriteFadeOutAnimation(1f);
+        StartCoroutine(DestroyedIn(1f));
         OnDeath?.Invoke(this);
+    }
+
+    protected IEnumerator DestroyedIn(float time) {
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 
     public EnemyTypeSO GetEnemyTypeSO() {

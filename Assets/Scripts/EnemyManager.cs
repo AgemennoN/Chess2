@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class EnemyManager : MonoBehaviour {
     public static EnemyManager Instance { get; private set; }
@@ -29,8 +31,12 @@ public class EnemyManager : MonoBehaviour {
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+
+        Pawn.OnPawnPromoted += HandlePawnPromoted;
     }
+
+
+
 
     public void Initialize() {
         pieceFactory = PieceFactory.Instance;
@@ -133,7 +139,7 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
-    public void SpawnEnemies() {
+    public void SpawnEnemyDictOfTheMap() {
         if (!enemyDictToCreate.ContainsKey(EnemyType.King)) {
             throw new ArgumentException("The dictionary must contain a King enemy.");
         }
@@ -211,6 +217,21 @@ public class EnemyManager : MonoBehaviour {
         return queue;
     }
 
+    private void HandlePawnPromoted(Pawn pawn, EnemyType newType) {
+        pawn.OnDeath -= HandleEnemyDeath;
+        BoardTile pawnTile = pawn.GetTile();
+
+        if (enemyDict.TryGetValue(EnemyType.Pawn, out var list)) {
+            list.Remove(pawn.gameObject);
+        }
+
+        GameObject newPiece = pieceFactory.CreatePieceOnBoard(BoardManager.Board, newType, pawnTile.GridPosition.x, pawnTile.GridPosition.y, transform);
+        RegisterToEnemyDict(newType, newPiece);
+
+        VisualEffects visualEffects = newPiece.GetComponent<VisualEffects>();
+        visualEffects.SpriteFadeInAnimation(Pawn.PromotionDuration, true);
+    }
+
     private void EndTurn() {
         turnManager.EndEnemyTurn();
     }
@@ -225,4 +246,7 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
+    private void OnDisable() {
+        Pawn.OnPawnPromoted -= HandlePawnPromoted;
+    }
 }

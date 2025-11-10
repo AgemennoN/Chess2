@@ -7,6 +7,7 @@ public class ChessPiece : MonoBehaviour {
     protected BoardTile currentTile;
     [SerializeField] protected List<BoardTile> availableTiles;
     [SerializeField] protected List<BoardTile> threatenedTiles;
+    protected float movementDuration = 0.5f;
 
     public void SetPosition(BoardTile tile) {
         if (currentTile != null) {
@@ -21,8 +22,7 @@ public class ChessPiece : MonoBehaviour {
     public void MoveToPosition(BoardTile tile) {
         if (currentTile != null) {
             currentTile.SetPiece(null); // Remove from old tile
-            //StartCoroutine(MoveToPositionPhysically(tile.transform.position, 0.3f));
-            TurnManager.Instance.RegisterAction(MoveToPositionPhysically(tile.transform.position, 0.3f));
+            TurnManager.Instance.RegisterAction(MoveToPositionPhysically(tile.transform.position, movementDuration));
         } else {
             transform.position = tile.transform.position;
         }
