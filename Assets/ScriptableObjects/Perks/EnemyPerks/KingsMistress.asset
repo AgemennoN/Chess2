@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
+  m_Name: KingsMistress
+  m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
+  title: King's Mistress
+  description: "Add 1 queen, Queen\u2019s moves are limited to 3 Squares"
+  sprite: {fileID: 0}
+  perkEffectList:
+  - rid: 8843858266994770039
+  - rid: 8843858266994770042
+  reSelectable: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 8843858266994770039
+      type: {class: PerkEffect_Enemy, ns: , asm: Assembly-CSharp}
+      data:
+        PerkEffectType: 0
+        effectedType: {fileID: 11400000, guid: db13996d5c1aa8944b77dec1d0b5df4c, type: 2}
+        effectAmount: 1
+    - rid: 8843858266994770042
+      type: {class: PerkEffect_Pattern, ns: , asm: Assembly-CSharp}
+      data:
+        PerkEffectType: 3
+        patternList:
+        - direction: {x: -1, y: -1}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: -1, y: 0}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: -1, y: 1}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: 0, y: -1}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: 0, y: 1}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: 1, y: -1}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: 1, y: 0}
+          movementType: 0
+          maxDistance: 3
+        - direction: {x: 1, y: 1}
+          movementType: 0
+          maxDistance: 3
+        effectedType: {fileID: 11400000, guid: db13996d5c1aa8944b77dec1d0b5df4c, type: 2}
+        changeCurrentPattern: 1
+        isForMovement: 1
+        isForThreat: 1

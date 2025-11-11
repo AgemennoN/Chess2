@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour {
     public static Action onEnemyCheckMatesThePlayer;
     public static Action onEnemyKingsDie;
 
-    private Dictionary<EnemyType, int> enemyDictToCreate;
+    public static Dictionary<EnemyType, int> enemyDictToCreate;
     private Dictionary<EnemyType, List<GameObject>> enemyDict;
 
     private PieceFactory pieceFactory; 
@@ -45,6 +45,7 @@ public class EnemyManager : MonoBehaviour {
 
         turnManager.OnEnemyTurnStarted += StartEnemyTurn;
 
+        InitEnemyDictToCreate();
         InitEnemyDict();
     }
 
@@ -140,7 +141,10 @@ public class EnemyManager : MonoBehaviour {
         onEnemyKingsDie?.Invoke();
     }
 
-    private void InitEnemyDict() {
+    private void InitEnemyDictToCreate() {
+        if (enemyDictToCreate != null)
+            return;
+
         enemyDictToCreate = new Dictionary<EnemyType, int>();
 
         enemyDictToCreate.Add(EnemyType.King, 1);
@@ -149,8 +153,9 @@ public class EnemyManager : MonoBehaviour {
         enemyDictToCreate.Add(EnemyType.Bishop, 1);
         enemyDictToCreate.Add(EnemyType.Knight, 1);
         enemyDictToCreate.Add(EnemyType.Pawn, 4);
+    }
 
-
+    private void InitEnemyDict() {
         enemyDict = new Dictionary<EnemyType, List<GameObject>>();
         foreach (EnemyType type in System.Enum.GetValues(typeof(EnemyType))) {
             enemyDict[type] = new List<GameObject>();

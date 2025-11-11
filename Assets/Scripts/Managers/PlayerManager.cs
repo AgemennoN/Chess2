@@ -121,6 +121,7 @@ public class PlayerManager : MonoBehaviour {
         playerPiece.MoveToPosition(tile);
         StartCoroutine(TurnManager.Instance.StartActionPhase(true));        // When all the registered coroutines end, End Turn
     }
+
     private void MakeSoulMovementTo(BoardTile tile) {
         playerPiece.MoveToPosition(tile);
 
@@ -130,7 +131,6 @@ public class PlayerManager : MonoBehaviour {
         SpendSoul();
         ExitSoulMode();
     }
-
 
     public void SpawnPlayer() {
         // TO DO: Make it private
