@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.VFX;
 
 
 
@@ -137,4 +138,39 @@ public class VisualEffects : MonoBehaviour {
             yield return null;
         }
     }
+
+    public void SpawnAnimation_Descend(float startDelay = 0.5f) {
+        StartCoroutine(SpawnAnimation_DescendRoutine(startDelay));
+    }
+
+    private IEnumerator SpawnAnimation_DescendRoutine(float startDelay, float duration = 0.6f) {
+        spriteRenderer.color = new Color(originalSpriteColor.r, originalSpriteColor.g, originalSpriteColor.b, 0);
+        spriteRenderer.transform.localPosition = originalSpriteLocalPos + new Vector3(0, 2.5f, 0);
+        
+        yield return new WaitForSeconds(startDelay);
+
+        float elapsed = 0f;
+        Vector3 startPos = spriteRenderer.transform.localPosition;
+        Vector3 endPos = originalSpriteLocalPos;
+
+        Color startColor = spriteRenderer.color;
+        Color endColor = originalSpriteColor;
+
+        // Smoothly move down and fade in
+        while (elapsed < duration) {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            t = Mathf.SmoothStep(0, 1, t); // ease in-out curve
+
+            spriteRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, t);
+            spriteRenderer.color = Color.Lerp(startColor, endColor, t);
+
+            yield return null;
+        }
+
+        // Snap to final position & color (in case of float rounding)
+        spriteRenderer.transform.localPosition = endPos;
+        spriteRenderer.color = endColor;
+    }
+
 }

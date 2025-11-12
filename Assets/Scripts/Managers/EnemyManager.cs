@@ -106,12 +106,19 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void KillAllEnemies() {
+        StartCoroutine(KillAllEnemiesRoutine(0.5f));
+    }
+
+    private IEnumerator KillAllEnemiesRoutine(float timeBetweenDeath) {
         List<EnemyPiece> allEnemies = enemyDict.Values.SelectMany(list => list).ToList();
         foreach (EnemyPiece enemy in allEnemies) {
+            //Smite Animation;
             enemy.Die();
+            yield return new WaitForSeconds(timeBetweenDeath);
         }
         onEnemyKingsDie?.Invoke();
     }
+
 
     private void InitEnemyDictToCreate() {
         if (enemyDictToCreate != null)
@@ -159,9 +166,11 @@ public class EnemyManager : MonoBehaviour {
                             continue;
 
                         nextPieceType = placementQueue.Dequeue();
-                        GameObject newPiece = pieceFactory.CreatePieceOnBoard(BoardManager.Board, nextPieceType, col, row, transform);
+                        GameObject newPieceObj = pieceFactory.CreatePieceOnBoard(BoardManager.Board, nextPieceType, col, row, transform);
+                        EnemyPiece enemy = newPieceObj.GetComponent<EnemyPiece>();
+                        enemy.SpawnAnimation_Descend(UnityEngine.Random.Range(0f,1f));
 
-                        RegisterToEnemyDict(nextPieceType, newPiece);
+                        RegisterToEnemyDict(nextPieceType, newPieceObj);
 
                         if (placementQueue.Count == 0) {
                             return;

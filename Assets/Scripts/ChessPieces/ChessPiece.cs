@@ -149,7 +149,6 @@ public class ChessPiece : MonoBehaviour {
     }
 
 
-
     public virtual List<BoardTile> GetAvailableTiles() {
         return availableTiles;
     }
@@ -157,4 +156,9 @@ public class ChessPiece : MonoBehaviour {
     public virtual List<BoardTile> GetThreatenedTiles() {
         return threatenedTiles;
     }
+
+    public void SpawnAnimation_Descend(float startDelay = 0.5f) {
+        visualEffects.SpawnAnimation_Descend(startDelay);
+    }
+
 }
