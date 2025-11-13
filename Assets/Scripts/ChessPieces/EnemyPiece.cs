@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemyPiece : ChessPiece {
     [SerializeField] protected EnemyTypeSO enemyTypeSO;
@@ -154,6 +155,7 @@ public class EnemyPiece : ChessPiece {
     }
 
     public void CapturePlayer() {
+        visualEffects.StopShake();  //Stop shaking if shaking
         PlayerManager.Instance.CapturedByEnemyAnimation();
         StartCoroutine(MoveToPositionPhysically_CapturePlayer());
     }
@@ -200,7 +202,7 @@ public class EnemyPiece : ChessPiece {
         }
 
         if (currentHealth - pendingDamage <= 0) {
-            Die();
+            Die(true);
         }
     }
 
@@ -211,17 +213,20 @@ public class EnemyPiece : ChessPiece {
         pendingDamage = 0;
         damageCoroutine = null;
     }
-    public void Die() {
+
+    public void Die(bool killedByPlayer=false) {
         if (IsDead) return;
         IsDead = true;
 
-        if((enemyTypeSO.enemyType != EnemyType.King && enemyTypeSO.enemyType != EnemyType.Pawn) 
-            && PlayerManager.Instance.CanHarvestSoul()) { // TO DO: Do i realy need to check with CanHarvest
-            PlayerManager.Instance.HarvestSoul(enemyTypeSO);
-            }
-
         BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.enabled = false;
+
+        if (killedByPlayer
+            && enemyTypeSO.enemyType != EnemyType.King
+            && enemyTypeSO.enemyType != EnemyType.Pawn
+            && PlayerManager.Instance.CanHarvestSoul()) {
+            PlayerManager.Instance.HarvestSoul(enemyTypeSO);
+        }
 
         currentTile.SetPiece(null);
         visualEffects.SpriteFadeOutAnimation(1f);
