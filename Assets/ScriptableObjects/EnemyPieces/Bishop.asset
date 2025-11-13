@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyType: 2
   maxHealth: 4
   speed: 3
+  sprite: {fileID: 0}
   movementPatterns:
   - direction: {x: 1, y: 1}
     movementType: 1
@@ -28,5 +29,16 @@ MonoBehaviour:
   - direction: {x: -1, y: -1}
     movementType: 1
     maxDistance: 0
-  isThreatSameWithMovement: 1
-  threatPatterns: []
+  threatPatterns:
+  - direction: {x: 1, y: 1}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: 1, y: -1}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: -1, y: 1}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: -1, y: -1}
+    movementType: 1
+    maxDistance: 0

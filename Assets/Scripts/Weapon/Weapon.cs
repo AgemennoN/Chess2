@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(AimIndicator))]
 public abstract class Weapon : MonoBehaviour
 {
+    [SerializeField] protected WeaponDataSO baseWeaponData;
     [SerializeField] protected WeaponDataSO weaponData;
 
     protected int currentMag;         // Current number of shells currently loaded in the weapon
@@ -20,13 +21,18 @@ public abstract class Weapon : MonoBehaviour
     }
 
     protected virtual void Start() {
+        aimIndicator.Hide();
+    }
+
+    public void InitializeWeapon(WeaponModifierData weaponModifierData = null) {
+        ApplyWeaponModifier(this, weaponModifierData);
+
         currentMag = weaponData.magCapacity;
         currentReserveAmmo = weaponData.maxReserveAmmo;
+
         bulletPool.SetInitialBulletSize(weaponData.firePower);
         bulletPool.Initialize();
 
-
-        aimIndicator.Hide();
         aimIndicator.SetValues(transform, weaponData.fireArc, weaponData.fireMinRange, weaponData.fireMaxRange);
     }
 
@@ -77,4 +83,18 @@ public abstract class Weapon : MonoBehaviour
         GUI.Label(new Rect(10, 40, 300, 20), $"Reserve: {currentReserveAmmo}/{weaponData.maxReserveAmmo}");
     }
 
+    internal static void ApplyWeaponModifier(Weapon weapon, WeaponModifierData weaponModifierData) {
+        weapon.weaponData = Instantiate(weapon.baseWeaponData);
+        if (weaponModifierData != null) {
+            weapon.weaponData.magCapacity += weaponModifierData.magCapacityChange;
+            weapon.weaponData.maxReserveAmmo += weaponModifierData.maxReserveAmmoChange;
+            weapon.weaponData.reloadAmount += weaponModifierData.reloadAmountChange;
+
+            weapon.weaponData.firePower += weaponModifierData.firePowerChange;
+            weapon.weaponData.fireMaxRange += weaponModifierData.fireRangeChange;
+            weapon.weaponData.fireMinRange += weaponModifierData.fireRangeChange;
+            weapon.weaponData.fireArc += weaponModifierData.fireArcChange;
+        }
+
+    }
 }

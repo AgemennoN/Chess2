@@ -94,13 +94,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0be60a6a904bf9740baf8da1fe46ca22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::King
+  visualEffects: {fileID: 0}
   availableTiles: []
   threatenedTiles: []
-  enemyTypeSO: {fileID: 11400000, guid: e2752e0e26ac6c24c87084909742a197, type: 2}
+  baseEnemyTypeSO: {fileID: 11400000, guid: e2752e0e26ac6c24c87084909742a197, type: 2}
+  enemyTypeSO: {fileID: 0}
   currentHealth: 0
   cooldownToMove: 0
   readyToMove: 0
-  visualEffects: {fileID: 0}
 --- !u!114 &3775066651856218325
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,17 @@ using UnityEngine;
 
 [System.Serializable]
 public class PerkEffect {
-    public PerkEffectType PerkEffectType;
+    public PerkEffectType perkEffectType;
+    public virtual void ApplyEffect(PerkManager perkManager) { }
+}
+
+[System.Serializable]
+public class PerkEffect_Enemy : PerkEffect {
+    public EnemyTypeSO effectedType;
+    public int effectAmount;
+    public override void ApplyEffect(PerkManager perkManager) {
+        perkManager.Apply_EnemyEffect(perkEffectType, effectedType, effectAmount);
+    }
 }
 
 [System.Serializable]
@@ -14,17 +24,19 @@ public class PerkEffect_Pattern : PerkEffect {
     public bool changeCurrentPattern;
     public bool isForMovement;
     public bool isForThreat;
-}
 
-[System.Serializable]
-public class PerkEffect_Enemy : PerkEffect {
-    public EnemyTypeSO effectedType;
-    public int effectAmount;
+    public override void ApplyEffect(PerkManager perkManager) {
+        perkManager.Apply_PatternEffect(patternList, effectedType, isForMovement, isForThreat, changeCurrentPattern);
+    }
+
 }
 
 [System.Serializable]
 public class PerkEffect_Weapon : PerkEffect {
     public int effectAmount;
+    public override void ApplyEffect(PerkManager perkManager) {
+        perkManager.Apply_WeaponEffect(perkEffectType, effectAmount);
+    }
 }
 
 [System.Serializable]

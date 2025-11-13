@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8152444997577337906}
   - component: {fileID: 1645048035352320044}
   - component: {fileID: 181630102537882499}
-  - component: {fileID: 1962368294006202531}
   - component: {fileID: 5957041602988762563}
+  - component: {fileID: 1962368294006202531}
   m_Layer: 0
   m_Name: pfShotgun
   m_TagString: Untagged
@@ -47,9 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aec4513dab94c142b7f1c78a708e9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shotgun
-  weaponData: {fileID: 11400000, guid: d47fe5d57c976644fbaf59d561688cb2, type: 2}
-  bulletPool: {fileID: 181630102537882499}
-  aimIndicator: {fileID: 5957041602988762563}
+  baseWeaponData: {fileID: 11400000, guid: d47fe5d57c976644fbaf59d561688cb2, type: 2}
+  weaponData: {fileID: 0}
 --- !u!114 &181630102537882499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +63,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletPool
   bulletPrefab: {fileID: 5940165733790521353, guid: 2b224b3b50b884f4a9b4dd1c3f68ae12, type: 3}
   initialSize: 5
+--- !u!114 &5957041602988762563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447662655480074876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e2b6581ccd2614eb178085fe56093d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AimIndicator
+  aimOrigin: {fileID: 0}
+  fireArc: 57
+  minDistance: 3
+  maxDistance: 5
+  segmentCount: 32
+  nearColor: {r: 190, g: 0, b: 0, a: 1}
+  farColor: {r: 0, g: 0, b: 0, a: 1}
+  maxFlickerSpeed: 25
+  lineWidth: 0.05
 --- !u!120 &1962368294006202531
 LineRenderer:
   serializedVersion: 2
@@ -174,24 +194,3 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &5957041602988762563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 447662655480074876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e2b6581ccd2614eb178085fe56093d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AimIndicator
-  aimOrigin: {fileID: 0}
-  fireArc: 57
-  minDistance: 3
-  maxDistance: 5
-  segmentCount: 32
-  nearColor: {r: 190, g: 0, b: 0, a: 1}
-  farColor: {r: 0, g: 0, b: 0, a: 1}
-  maxFlickerSpeed: 25
-  lineWidth: 0.05

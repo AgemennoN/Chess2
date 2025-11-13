@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2f7eda354d34d541a2029ddf8b1d4a4, type: 3}
-  m_Name: PlayerPerksList
+  m_Name: EnemyPerksList
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardListSO
   perkList:
-  - {fileID: 11400000, guid: a0828edff2272414091ebc18a743529d, type: 2}
-  - {fileID: 11400000, guid: 1111b4ee5c6973a4f87f5286584ad40f, type: 2}
-  - {fileID: 11400000, guid: 15ed77ed9b0a50b48980ff0f09aa3242, type: 2}
+  - {fileID: 11400000, guid: 5beb894398280754ea234eabf07d0a79, type: 2}
+  - {fileID: 11400000, guid: 8cc4a3c544ba95f4aa259b361bca863d, type: 2}
+  - {fileID: 11400000, guid: 1b6702c2cc7c41244bdc7eefba22b22d, type: 2}
+  - {fileID: 11400000, guid: 2cbed0fbf0a5a6b4c88ded9fefaed38e, type: 2}
+  - {fileID: 11400000, guid: 9bf2837adfbec0d4d9c5a9e4f0c921c4, type: 2}

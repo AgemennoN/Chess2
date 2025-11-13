@@ -7,8 +7,8 @@ public class AimIndicator : MonoBehaviour {
 
     [Header("Arc Settings")]
     [SerializeField] private float fireArc = 57f;
-    [SerializeField] private float minDistance = 3f;
     [SerializeField] private float maxDistance = 5f;
+    [SerializeField] private float minDistance = 3f;
     [SerializeField] private int segmentCount = 32;
 
     [Header("Visual Settings")]

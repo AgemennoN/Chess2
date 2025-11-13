@@ -9,11 +9,13 @@ public class PlayerManager : MonoBehaviour {
     public static PlayerManager Instance { get; private set; }
 
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject weaponPrefab;
     [SerializeField] private ArrowIndicator arrowIndicator;
     [SerializeField] private BoardInputBroadcaster boardInputBroadcaster;
 
     private TurnManager turnManager;
     private PlayerPiece playerPiece;
+    private PerkManager perkManager;
     private List<BoardTile> playerAvailableMoves;
     private Weapon weapon;
 
@@ -37,6 +39,7 @@ public class PlayerManager : MonoBehaviour {
 
     public void Initialize() {
         turnManager = TurnManager.Instance;
+        perkManager = PerkManager.Instance;
 
         boardInputBroadcaster.OnTileHovered += HandleTileHover;
         boardInputBroadcaster.OnTileClicked += HandleTileClick;
@@ -44,16 +47,12 @@ public class PlayerManager : MonoBehaviour {
         turnManager.OnPlayerTurnStarted += StartPlayerTurn;
 
         InitializeSouls();
-        Debug.Log("soulTypeSOList: " + soulTypeSOList);
     }
 
     private void InitializeSouls() {
-        Debug.Log("soulTypeSOList.Count: " + soulTypeSOList.Count);
         while (soulTypeSOList.Count < soulSlot) {
-            Debug.Log("ADD NULL");
             soulTypeSOList.Add(null);
         }
-        Debug.Log("soulTypeSOList.Count: " + soulTypeSOList.Count);
     }
 
     private void HandleTileHover(BoardTile tile) {
@@ -133,14 +132,17 @@ public class PlayerManager : MonoBehaviour {
     }
 
     private Coroutine SpawnPlayer() {
-        GameObject obj = Instantiate(playerPrefab, transform);
-        playerPiece = obj.GetComponent<PlayerPiece>();
+        GameObject playerPieceObj = Instantiate(playerPrefab, transform);
+        playerPiece = playerPieceObj.GetComponent<PlayerPiece>();
 
         playerPiece.SetPosition(BoardManager.Board[4, 0]);
         Coroutine playerSpawnAnimation = playerPiece.SpawnAnimation_Descend(0f);
-        weapon = obj.GetComponentInChildren<Weapon>();
 
-         return playerSpawnAnimation;
+        GameObject weaponObj = Instantiate(weaponPrefab, playerPieceObj.transform);
+        weapon = weaponObj.GetComponent<Weapon>();
+        weapon.InitializeWeapon(perkManager.GetWeaponModifierData());
+
+        return playerSpawnAnimation;
     }
 
     private void StartPlayerTurn() {

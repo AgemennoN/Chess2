@@ -7,16 +7,17 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyManager : MonoBehaviour {
     public static EnemyManager Instance { get; private set; }
-    public static Dictionary<EnemyType, int> enemyDictToCreate;
 
     public static Action onEnemyCheckMatesThePlayer;
     public static Action onEnemyKingsDie;
 
+    private Dictionary<EnemyType, int> enemyDictToCreate;
     private Dictionary<EnemyType, List<EnemyPiece>> enemyDict;
 
     private PieceFactory pieceFactory; 
     private BoardManager boardManager;
     private TurnManager turnManager;
+    private PerkManager perkManager;
 
     private readonly EnemyType[] executionOrder =
         {
@@ -43,10 +44,11 @@ public class EnemyManager : MonoBehaviour {
         pieceFactory = GetComponent<PieceFactory>();
         boardManager = BoardManager.Instance;
         turnManager = TurnManager.Instance;
+        perkManager = PerkManager.Instance;
 
         turnManager.OnEnemyTurnStarted += StartEnemyTurn;
 
-        InitEnemyDictToCreate();
+        InitEnemyDictToCreateWithDefaultValues();
         InitEnemyDict();
     }
 
@@ -115,10 +117,8 @@ public class EnemyManager : MonoBehaviour {
         }
     }
 
-    private void InitEnemyDictToCreate() {
-        if (enemyDictToCreate != null)
-            return;
-
+    private void InitEnemyDictToCreateWithDefaultValues() {
+        // Default Enemy Spawn Values
         enemyDictToCreate = new Dictionary<EnemyType, int>();
 
         enemyDictToCreate.Add(EnemyType.King, 1);
@@ -163,8 +163,9 @@ public class EnemyManager : MonoBehaviour {
                             continue;
 
                         nextPieceType = placementQueue.Dequeue();
-                        GameObject newPieceObj = pieceFactory.CreatePieceOnBoard(BoardManager.Board, nextPieceType, col, row, transform);
+                        GameObject newPieceObj = pieceFactory.CreateEnemyPieceOnBoard(BoardManager.Board, nextPieceType, col, row, transform);
                         EnemyPiece enemy = newPieceObj.GetComponent<EnemyPiece>();
+                        enemy.InitializePiece(perkManager.GetEnemyModifierFor(nextPieceType));
                         enemySpawnAnimations.Add(enemy.SpawnAnimation_Descend(UnityEngine.Random.Range(0f,1f)));
 
                         RegisterToEnemyDict(nextPieceType, newPieceObj);
@@ -228,15 +229,28 @@ public class EnemyManager : MonoBehaviour {
             list.Remove(pawn);
         }
 
-        GameObject newPiece = pieceFactory.CreatePieceOnBoard(BoardManager.Board, newType, pawnTile.GridPosition.x, pawnTile.GridPosition.y, transform);
-        RegisterToEnemyDict(newType, newPiece);
+        GameObject newPieceObj = pieceFactory.CreateEnemyPieceOnBoard(BoardManager.Board, newType, pawnTile.GridPosition.x, pawnTile.GridPosition.y, transform);
+        RegisterToEnemyDict(newType, newPieceObj);
 
-        VisualEffects visualEffects = newPiece.GetComponent<VisualEffects>();
-        visualEffects.SpriteFadeInAnimation(Pawn.PromotionDuration, true);
+        EnemyPiece enemyPiece = newPieceObj.GetComponent<EnemyPiece>();
+        enemyPiece.InitializePiece(perkManager.GetEnemyModifierFor(newType));
+        enemyPiece.visualEffects.SpriteFadeInAnimation(Pawn.PromotionDuration, true);
+        
+        enemyPiece.UpdateThreatenedTiles(BoardManager.Board);
     }
 
     public IEnumerator NewFloorPreparation() {
+        ApplyEnemySpawnModification();
         yield return StartCoroutine(SpawnEnemyDictOfTheFloor());
+    }
+
+    private void ApplyEnemySpawnModification() {
+        InitEnemyDictToCreateWithDefaultValues();
+        Dictionary<EnemyType, int> enemySpawnModificationDict = perkManager.GetEnemySpawnModificationDict();
+
+        foreach (EnemyType enemyType in enemySpawnModificationDict.Keys) {
+            enemyDictToCreate[enemyType] += enemySpawnModificationDict[enemyType];
+        }
     }
 
     public IEnumerator onPlayerWin_EnemyManager() {
@@ -244,7 +258,7 @@ public class EnemyManager : MonoBehaviour {
     }
 
     public static void ResetStaticVariablesOnDefeat() {
-        enemyDictToCreate = null; // TO DO: Should I clean the dictionary
+        // TO DO: Delete if not something here
     }
 
     private void OnDisable() {

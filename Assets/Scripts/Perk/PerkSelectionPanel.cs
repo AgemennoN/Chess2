@@ -14,11 +14,6 @@ public class PerkSelectionPanel : MonoBehaviour {
         PerkCardSO playerPerk_1, PerkCardSO enemyPerk_1,
         PerkCardSO playerPerk_2, PerkCardSO enemyPerk_2) {
 
-
-        Debug.Log("PerkSelectionPanel ");
-        Debug.Log("playerPerk_1 " + playerPerk_1 + "enemyPerk_1 " + enemyPerk_1);
-        Debug.Log("playerPerk_2 " + playerPerk_2 + "enemyPerk_2 " + enemyPerk_2);
-
         perkChoise_1.UpdatePerks(playerPerk_1, enemyPerk_1);
         perkChoise_2.UpdatePerks(playerPerk_2, enemyPerk_2);
     }

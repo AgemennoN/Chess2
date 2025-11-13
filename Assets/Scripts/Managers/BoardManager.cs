@@ -114,12 +114,4 @@ public class BoardManager : MonoBehaviour {
         Board = null;
     }
 
-    public void PrintBoard() {
-        for (int x = 0; x < boardWidth; x++) {
-            for (int y = 0; y < boardHeight; y++) {
-                Debug.Log(Board[x, y].ToString());
-            }
-            Debug.LogWarning(" ");
-        }
-    }
 }

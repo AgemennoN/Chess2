@@ -5,30 +5,35 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class EnemyPiece : ChessPiece {
-    [SerializeField] protected EnemyTypeSO enemyTypeSO;
+    [SerializeField] public EnemyTypeSO baseEnemyTypeSO;
+    [SerializeField] public EnemyTypeSO enemyTypeSO;
+
+    public bool IsDead { get; private set; }
+
     [SerializeField] protected int currentHealth;
     [SerializeField] protected int cooldownToMove;
-    [SerializeField] protected bool readyToMove = false;
-
-
+    [SerializeField] protected bool readyToMove;
     private Coroutine damageCoroutine;
     private int pendingDamage;
 
-    public bool IsDead { get; private set; }
     //TO DO: Refactor VisualEffects to be an observer.
     public System.Action<EnemyPiece> OnDeath;
-    //public System.Action<EnemyPiece,int> OnTakeDamage;
 
 
     protected override void Awake() {
         base.Awake();
-        if (enemyTypeSO != null) {
-            currentHealth = enemyTypeSO.maxHealth;
-            cooldownToMove = UnityEngine.Random.Range(2, enemyTypeSO.speed + 1);
-        }
 
+        readyToMove = false;
         IsDead = false;
     }
+
+    public void InitializePiece(EnemyModifierData enemyModifierData=null) {
+        ApplyEnemyModifier(this, enemyModifierData);
+
+        currentHealth = enemyTypeSO.maxHealth;
+        cooldownToMove = UnityEngine.Random.Range(2, enemyTypeSO.speed + 1);
+    }
+
 
     public bool CheckControl(bool showThreat=false) {
         UpdateThreatenedTiles(BoardManager.Board);
@@ -103,9 +108,7 @@ public class EnemyPiece : ChessPiece {
     public override void UpdateThreatenedTiles(BoardTile[,] board) {
         threatenedTiles = new List<BoardTile>();
 
-        List<MovementPattern> patterns = enemyTypeSO.isThreatSameWithMovement
-            ? enemyTypeSO.movementPatterns
-            : enemyTypeSO.threatPatterns;
+        List<MovementPattern> patterns = enemyTypeSO.threatPatterns;
 
         Vector2Int currentPos = currentTile.GridPosition;
         threatenedTiles = GetTilesFromPatternList(board, currentPos, patterns, true);
@@ -143,9 +146,7 @@ public class EnemyPiece : ChessPiece {
         // Temporarily imagine the enemy moved to that tile:
         List<BoardTile> threatenedTiles = new List<BoardTile>();
 
-        List<MovementPattern> patterns = enemyTypeSO.isThreatSameWithMovement
-            ? enemyTypeSO.movementPatterns
-            : enemyTypeSO.threatPatterns;
+        List<MovementPattern> patterns = enemyTypeSO.threatPatterns;
 
         threatenedTiles = GetTilesFromPatternList(board, fromTile.GridPosition, patterns, true);
 
@@ -241,6 +242,17 @@ public class EnemyPiece : ChessPiece {
 
     public EnemyTypeSO GetEnemyTypeSO() {
         return enemyTypeSO;
+    }
+
+    private static void ApplyEnemyModifier(EnemyPiece enemyPiece, EnemyModifierData enemyModifierData) {
+        enemyPiece.enemyTypeSO = Instantiate(enemyPiece.baseEnemyTypeSO);
+        if (enemyModifierData != null) {
+            enemyPiece.enemyTypeSO.maxHealth = Math.Max(1, enemyPiece.enemyTypeSO.maxHealth + enemyModifierData.healthChange);
+            enemyPiece.enemyTypeSO.speed = Math.Max(2, enemyPiece.enemyTypeSO.speed + enemyModifierData.speedChange);
+
+            enemyPiece.enemyTypeSO.movementPatterns = new List<MovementPattern>(enemyModifierData.movementPatterns);
+            enemyPiece.enemyTypeSO.threatPatterns = new List<MovementPattern>(enemyModifierData.threatPatterns);
+        }
     }
 
 }

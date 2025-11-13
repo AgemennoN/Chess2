@@ -17,7 +17,6 @@ public class Bullet : MonoBehaviour {
         this.maxDistance = maxDistance;
         this.pool = pool;
         startPosition = transform.position;
-        //Debug.Log($"BULLET_Initialize_{bulletNumberDebug}");
     }
 
     private void Update() {

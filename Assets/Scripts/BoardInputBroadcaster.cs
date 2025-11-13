@@ -46,8 +46,6 @@ public class BoardInputBroadcaster : MonoBehaviour
     private void CheckTileClick() {
         if (currentHoveredTile != null) {
             Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log($"Clicked v3: {mouseWorldPos}");
-
             OnTileClicked?.Invoke(currentHoveredTile, mouseWorldPos); // Broadcast click
         }
     }

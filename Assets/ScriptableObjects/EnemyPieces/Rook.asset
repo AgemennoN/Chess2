@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rook
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 3
-  maxHealth: 1
+  maxHealth: 5
   speed: 4
   sprite: {fileID: 0}
   movementPatterns:
@@ -29,5 +29,16 @@ MonoBehaviour:
   - direction: {x: 0, y: -1}
     movementType: 1
     maxDistance: 0
-  isThreatSameWithMovement: 1
-  threatPatterns: []
+  threatPatterns:
+  - direction: {x: 1, y: 0}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: -1, y: 0}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: 0, y: 1}
+    movementType: 1
+    maxDistance: 0
+  - direction: {x: 0, y: -1}
+    movementType: 1
+    maxDistance: 0

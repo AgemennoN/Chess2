@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
-  m_Name: Blunderbuss
+  m_Name: Player_ExtraBarrel
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
-  title: Blunderbuss
-  description: +2 firePower, 30 fireARc
+  title: ExtraBarrel
+  description: 'Charge 1 Additional Shell in your Shotgun, Fire Arc: +7 '
   sprite: {fileID: 0}
   perkEffectList:
   - rid: 8843858266994770036
@@ -25,10 +25,10 @@ MonoBehaviour:
     - rid: 8843858266994770036
       type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
       data:
-        PerkEffectType: 7
-        effectAmount: 2
+        perkEffectType: 4
+        effectAmount: 1
     - rid: 8843858266994770038
       type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
       data:
-        PerkEffectType: 9
-        effectAmount: 30
+        perkEffectType: 9
+        effectAmount: 7

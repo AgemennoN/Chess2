@@ -15,6 +15,7 @@ public struct MovementPattern {
 }
 
 
+[System.Serializable]
 [CreateAssetMenu(fileName = "EnemyTypeSO", menuName = "Scriptable Objects/EnemyTypeSO")]
 public class EnemyTypeSO : ScriptableObject
 {
@@ -26,7 +27,5 @@ public class EnemyTypeSO : ScriptableObject
     public Sprite sprite; 
 
     public List<MovementPattern> movementPatterns;
-    public bool isThreatSameWithMovement = false;
     public List<MovementPattern> threatPatterns;
-
 }

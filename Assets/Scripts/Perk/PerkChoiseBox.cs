@@ -15,16 +15,6 @@ public class PerkChoiseBox : MonoBehaviour {
         this.playerPerk = playerPerk;
         this.enemyPerk = enemyPerk;
 
-
-        Debug.Log("-------------------------------------------------------");
-        Debug.Log("PerkChoiseBox ");
-        Debug.Log("playerPerk.title: " + playerPerk.title);
-        Debug.Log("playerPerk.description: " + playerPerk.description);
-        Debug.Log("enemyPerk.title: " + enemyPerk.title);
-        Debug.Log("enemyPerk.description: " + enemyPerk.description);
-        Debug.Log("-------------------------------------------------------");
-
-
         //playerPerkOverlay.transform.Find("image").GetComponent<Image>().sprite = playerPerk.sprite;
         playerPerkOverlay.transform.Find("title").GetComponent<TextMeshProUGUI>().text = playerPerk.title;
         playerPerkOverlay.transform.Find("description").GetComponent<TextMeshProUGUI>().text = playerPerk.description;

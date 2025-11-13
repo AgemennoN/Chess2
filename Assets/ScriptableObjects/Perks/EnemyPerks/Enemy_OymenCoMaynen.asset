@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
+  m_Name: Enemy_OymenCoMaynen
+  m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
+  title: OymenCoMaynen
+  description: "At cok g\xFCcl\xFC olcak"
+  sprite: {fileID: 0}
+  perkEffectList:
+  - rid: 8843858311993098751
+  reSelectable: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 8843858311993098751
+      type: {class: PerkEffect_Pattern, ns: , asm: Assembly-CSharp}
+      data:
+        perkEffectType: 3
+        patternList:
+        - direction: {x: 3, y: 1}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: 3, y: -1}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: -3, y: 1}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: -3, y: -1}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: 1, y: 3}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: 1, y: -3}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: -1, y: 3}
+          movementType: 2
+          maxDistance: 0
+        - direction: {x: -1, y: -3}
+          movementType: 2
+          maxDistance: 0
+        effectedType: {fileID: 11400000, guid: 4add94b770f72c544bb87244e3bab7bf, type: 2}
+        changeCurrentPattern: 0
+        isForMovement: 1
+        isForThreat: 1

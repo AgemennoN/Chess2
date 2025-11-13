@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PieceFactory : MonoBehaviour {
@@ -9,7 +11,7 @@ public class PieceFactory : MonoBehaviour {
     public GameObject bishopPrefab;
     public GameObject pawnPrefab;
 
-    public GameObject CreatePieceOnBoard(BoardTile[,] board, EnemyType enemyType, int x, int y, Transform parent) {
+    public GameObject CreateEnemyPieceOnBoard(BoardTile[,] board, EnemyType enemyType, int x, int y, Transform parent) {
         // x is column, y is row
         if (board[x, y].GetPiece() != null) {
             Debug.LogWarning($"board[{x},{y}] already has a piece.");
@@ -23,9 +25,9 @@ public class PieceFactory : MonoBehaviour {
         }
 
         GameObject obj = Instantiate(prefab,parent.transform);
-        ChessPiece piece = obj.GetComponent<ChessPiece>();
+        EnemyPiece enemyPiece = obj.GetComponent<EnemyPiece>();
 
-        piece.SetPosition(board[x,y]);
+        enemyPiece.SetPosition(board[x,y]);
         return obj;
     }
 
