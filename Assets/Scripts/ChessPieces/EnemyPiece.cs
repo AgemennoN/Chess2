@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public class EnemyStats {
+    public int maxHealth;
+    public int currentHealth;
+    public int speed;
+    public int cooldownToMove;
+}
+
 public class EnemyPiece : ChessPiece {
     [SerializeField] public EnemyTypeSO baseEnemyTypeSO;
     [SerializeField] public EnemyTypeSO enemyTypeSO;
@@ -242,6 +249,17 @@ public class EnemyPiece : ChessPiece {
 
     public EnemyTypeSO GetEnemyTypeSO() {
         return enemyTypeSO;
+    }
+
+    public EnemyStats GetEnemyStats() {
+        EnemyStats stats = new EnemyStats();
+        stats.maxHealth = enemyTypeSO.maxHealth;
+        stats.currentHealth = currentHealth;
+
+        stats.speed = enemyTypeSO.speed;
+        stats.cooldownToMove = cooldownToMove;
+
+        return stats;
     }
 
     private static void ApplyEnemyModifier(EnemyPiece enemyPiece, EnemyModifierData enemyModifierData) {

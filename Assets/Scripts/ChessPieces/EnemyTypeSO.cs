@@ -20,6 +20,7 @@ public struct MovementPattern {
 public class EnemyTypeSO : ScriptableObject
 {
     public EnemyType enemyType;
+    public string pieceName;
     public int maxHealth;
     public int speed;
 
