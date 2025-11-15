@@ -89,6 +89,7 @@ public class PlayerManager : MonoBehaviour {
             if (soulModeEnabled == false) {
                 if (playerAvailableMoves.Contains(tile)) {
                     if (IsActionApprovedByShieldProtection(tile)) {
+                        weapon.Reload();
                         MakePlayerMovementTo(tile);
                     }
                 } else if (tile != playerPiece.GetTile()) {
@@ -103,6 +104,7 @@ public class PlayerManager : MonoBehaviour {
                     if(specialPerk_turnContinueAfterSoul == true) {
                         MakePlayerMovementTo(tile);
                     }else if (IsActionApprovedByShieldProtection(tile)) {
+                        weapon.Reload();
                         MakePlayerMovementTo(tile);
                     }
                 }
@@ -140,7 +142,6 @@ public class PlayerManager : MonoBehaviour {
 
     private void StartPlayerTurn() {
         RestoreShieldCharges();
-        weapon.Reload();
 
         playerPiece.UpdateAvailableTiles(BoardManager.Board);
         playerAvailableMoves = playerPiece.GetAvailableTiles();
