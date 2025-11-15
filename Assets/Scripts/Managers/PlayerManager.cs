@@ -154,6 +154,9 @@ public class PlayerManager : MonoBehaviour {
         playerPiece.UpdateAvailableTiles(BoardManager.Board);
         playerAvailableMoves = playerPiece.GetAvailableTiles();
         RestoreShieldCharges();
+
+        boardInputBroadcaster.CheckTileHover(true);
+
         // Maybe Also get safeMoves(not threatened)
     }
 

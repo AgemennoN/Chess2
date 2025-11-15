@@ -31,11 +31,12 @@ public class BoardInputBroadcaster : MonoBehaviour
         }
     }
 
-    private void CheckTileHover() {
+    public void CheckTileHover(bool resetCurrentTile=false) {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity, boardTileLayerMask);
 
         BoardTile hoveredTile = hit.collider ? hit.collider.GetComponent<BoardTile>() : null;
+        if (resetCurrentTile) currentHoveredTile = null;
 
         if (hoveredTile != currentHoveredTile) {
             currentHoveredTile = hoveredTile;
@@ -49,4 +50,5 @@ public class BoardInputBroadcaster : MonoBehaviour
             OnTileClicked?.Invoke(currentHoveredTile, mouseWorldPos); // Broadcast click
         }
     }
+
 }
