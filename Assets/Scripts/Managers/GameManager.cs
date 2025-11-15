@@ -7,11 +7,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
     public static GameManager Instance { get; private set; }
-    public static int Floor = 1;
+    public static int Floor = 0;
 
     private PerkManager perkManager;
     private EnemyManager enemyManager;
     private PlayerManager playerManager;
+    private PlayerSoulController playerSoulController;
     private BoardManager boardManager;
     private TurnManager turnManager;
 
@@ -33,7 +34,7 @@ public class GameManager : MonoBehaviour {
     private void Start() {
         Initialize();
 
-        StartCoroutine(StartFloor());
+        LoadNextFloor();
     }
 
     public void Initialize() {
@@ -46,8 +47,13 @@ public class GameManager : MonoBehaviour {
         playerManager = PlayerManager.Instance;
         playerManager.Initialize();
 
+        playerSoulController = PlayerSoulController.Instance;
+        playerSoulController.Initialize();
+
         perkManager = PerkManager.Instance;
         perkManager.Initialize();
+
+        perkManager.OnPerkSelectionEnded += LoadNextFloor;
 
         EnemyManager.onEnemyCheckMatesThePlayer += HandleEnemyWins;
         EnemyManager.onEnemyKingsDie += HandlePlayerWins;
@@ -59,6 +65,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public IEnumerator PrepareNewFloor() {
+
+        StartCoroutine(playerSoulController.NewFloorPreparation(perkManager.GetSoulModifierData()));
         yield return StartCoroutine(boardManager.NewFloorPreparation());        //Generates Board
         yield return StartCoroutine(enemyManager.NewFloorPreparation());        //Generates Enemies
         yield return StartCoroutine(playerManager.NewFloorPreparation());       //Generates PlayerPiece
@@ -86,6 +94,8 @@ public class GameManager : MonoBehaviour {
 
         yield return StartCoroutine(enemyManager.onPlayerWin_EnemyManager());
         yield return StartCoroutine(playerManager.onPlayerWin_PlayerManager());
+
+        StartCoroutine(playerSoulController.onPlayerWin_PlayerSoulController());
         yield return StartCoroutine(boardManager.onPlayerWin_BoardManager());
 
         perkManager.onPlayerWin_PerkManager();
@@ -93,7 +103,6 @@ public class GameManager : MonoBehaviour {
 
     public void LoadNextFloor() { // Called from Perk select panel buttons
         Floor++;
-        //When the Perk Manager ready Restart Scene
         StartCoroutine(StartFloor());
 
     }
@@ -101,6 +110,9 @@ public class GameManager : MonoBehaviour {
     private void OnDisable() {
         EnemyManager.onEnemyCheckMatesThePlayer -= HandleEnemyWins;
         EnemyManager.onEnemyKingsDie -= HandlePlayerWins;
+    }
+    private void OnDestroy() {
+        perkManager.OnPerkSelectionEnded -= LoadNextFloor;
     }
 
     public static void ResetStaticVariablesOnDefeat() {
@@ -113,5 +125,4 @@ public class GameManager : MonoBehaviour {
         EnemyManager.ResetStaticVariablesOnDefeat();
         PlayerManager.ResetStaticVariablesOnDefeat();
     }
-
 }

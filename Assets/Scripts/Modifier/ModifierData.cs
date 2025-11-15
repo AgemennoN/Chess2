@@ -43,11 +43,9 @@ public class WeaponModifierData {
 [System.Serializable]
 public class SoulModifierData {
     public int soulSlotChange;
-    public bool moveAfterSoulUsageEnable;
     public static readonly int soulSlotDefault = 1;
 
     public SoulModifierData() {
         soulSlotChange = 0;
-        moveAfterSoulUsageEnable = false;
     }
 }

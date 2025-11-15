@@ -16,7 +16,9 @@ public enum PerkEffectType
     FireArc,            //Handled in PerkEffect_Weapon
 
     SoulSlot,           //Handled in PerkEffect_Soul
-    MoveAfterSoul,      //Handled in PerkEffect_Soul
+
+
+    Special_TurnContinueAfterSoul,      //Handled in PerkEffect_Special
 
 
 }

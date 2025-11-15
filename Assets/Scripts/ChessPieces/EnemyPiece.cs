@@ -18,6 +18,7 @@ public class EnemyPiece : ChessPiece {
 
     //TO DO: Refactor VisualEffects to be an observer.
     public System.Action<EnemyPiece> OnDeath;
+    public static System.Action<EnemyPiece> OnSoulHarvested;
 
 
     protected override void Awake() {
@@ -224,9 +225,8 @@ public class EnemyPiece : ChessPiece {
 
         if (killedByPlayer
             && enemyTypeSO.enemyType != EnemyType.King
-            && enemyTypeSO.enemyType != EnemyType.Pawn
-            && PlayerManager.Instance.CanHarvestSoul()) {
-            PlayerManager.Instance.HarvestSoul(enemyTypeSO);
+            && enemyTypeSO.enemyType != EnemyType.Pawn) {
+            OnSoulHarvested?.Invoke(this);
         }
 
         currentTile.SetPiece(null);

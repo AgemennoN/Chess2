@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
   m_Name: Player_RemoveSoulSlot
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
-  title: MajesticCenser
+  title: REMOVE SOUL
   description: +2 Ammo max, +1 Ammo Regen, Remove 1 soul slot
   sprite: {fileID: 0}
   perkEffectList:

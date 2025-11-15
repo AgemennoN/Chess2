@@ -15,3 +15,4 @@ MonoBehaviour:
   perkList:
   - {fileID: 11400000, guid: 1111b4ee5c6973a4f87f5286584ad40f, type: 2}
   - {fileID: 11400000, guid: 5b6ed2042e0b96e4ebb9ca058c364926, type: 2}
+  - {fileID: 11400000, guid: 19440264c3114144bb5d2b5c686e12aa, type: 2}

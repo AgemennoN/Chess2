@@ -15,7 +15,7 @@ MonoBehaviour:
   enemyType: 2
   maxHealth: 4
   speed: 3
-  sprite: {fileID: 0}
+  sprite: {fileID: 7560534232159598683, guid: 43d2cbc0c13de284c970097d1e9cefbb, type: 3}
   movementPatterns:
   - direction: {x: 1, y: 1}
     movementType: 1

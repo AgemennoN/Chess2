@@ -46,3 +46,10 @@ public class PerkEffect_Soul : PerkEffect {
         perkManager.Apply_SoulEffect(perkEffectType, effectAmount);
     }
 }
+
+[System.Serializable]
+public class PerkEffect_Special : PerkEffect {
+    public override void ApplyEffect(PerkManager perkManager) {
+        perkManager.Apply_SpecialEffect(perkEffectType);
+    }
+}

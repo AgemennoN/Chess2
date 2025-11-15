@@ -15,11 +15,11 @@ MonoBehaviour:
   enemyType: 0
   maxHealth: 3
   speed: 5
+  sprite: {fileID: 5580225292014371162, guid: ce1a712ab511b5f4fa3cd60e77f9d049, type: 3}
   movementPatterns:
   - direction: {x: 0, y: -1}
     movementType: 0
     maxDistance: 1
-  isThreatSameWithMovement: 0
   threatPatterns:
   - direction: {x: 1, y: -1}
     movementType: 0

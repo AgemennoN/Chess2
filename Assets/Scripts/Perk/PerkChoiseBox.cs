@@ -31,7 +31,6 @@ public class PerkChoiseBox : MonoBehaviour {
     }
 
     private void OnPerkSelected() {
-        PerkManager.Instance.AddPerkToList(true, playerPerk);
-        PerkManager.Instance.AddPerkToList(false, enemyPerk);
+        PerkManager.Instance.AddChosenPerksToLists(playerPerk, enemyPerk);
     }
 }

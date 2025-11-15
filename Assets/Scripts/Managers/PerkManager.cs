@@ -22,6 +22,11 @@ public class PerkManager : MonoBehaviour {
     private WeaponModifierData weaponModifierData;
     private SoulModifierData soulModifierData;
 
+    public Action OnPerkSelectionEnded;     //GameManager subscribes to this to load next floor
+
+    [Header("Special Perk Actions")]
+    public Action OnTurnContinueAfterSoul;
+
     private void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
@@ -91,22 +96,18 @@ public class PerkManager : MonoBehaviour {
         return (perk1, perk2);
     }
 
-    public void AddPerkToList(bool isPlayerPerk, PerkCardSO newPerk) {
-        List<PerkCardSO> perkList_Chosen;
-        List<PerkCardSO> perklist_Available;
+    public void AddChosenPerksToLists(PerkCardSO newPlayerPerk, PerkCardSO newEnemyPerk) {
+        playerPerks_Chosen.Add(newPlayerPerk);
+        if (!newPlayerPerk.reSelectable)
+            playerPerks_Available.Remove(newPlayerPerk);
+        ApplyPerk(newPlayerPerk);
 
-        if (isPlayerPerk) {
-            perkList_Chosen = playerPerks_Chosen;
-            perklist_Available = playerPerks_Available;
-        } else {
-            perkList_Chosen = enemyPerks_Chosen;
-            perklist_Available = enemyPerks_Available;
-        }
-        perkList_Chosen.Add(newPerk);
-        if(!newPerk.reSelectable)
-            perklist_Available.Remove(newPerk);
+        enemyPerks_Chosen.Add(newEnemyPerk);
+        if (!newEnemyPerk.reSelectable)
+            enemyPerks_Available.Remove(newEnemyPerk);
+        ApplyPerk(newEnemyPerk);
 
-        ApplyPerk(newPerk);
+        OnPerkSelectionEnded?.Invoke();
     }
 
     private void ApplyPerk(PerkCardSO perk) {
@@ -192,8 +193,15 @@ public class PerkManager : MonoBehaviour {
             case PerkEffectType.SoulSlot:
                 soulModifierData.soulSlotChange += effectAmount;
                 break;
-            case PerkEffectType.MoveAfterSoul:
-                soulModifierData.moveAfterSoulUsageEnable = true;
+            default:
+                break;
+        }
+    }
+
+    internal void Apply_SpecialEffect(PerkEffectType perkEffectType) {
+        switch (perkEffectType) {
+            case PerkEffectType.Special_TurnContinueAfterSoul:
+                OnTurnContinueAfterSoul?.Invoke();
                 break;
             default:
                 break;
@@ -245,7 +253,7 @@ public class PerkManager : MonoBehaviour {
 
     public void onPlayerWin_PerkManager() {
         SendPerksToTheSelectionPanel();
-        perkSelectionPanel.SetSelfEnable();
+        perkSelectionPanel.gameObject.SetActive(true);
 
     }
 

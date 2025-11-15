@@ -12,23 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
   m_Name: Player_SafeSoulMovement
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
-  title: MajesticCenser
-  description: +1 Ammo max, Add 1 Extra soul slot
+  title: SafeSoulMovement
+  description: Turn does not end after soul, Add 1 soul
   sprite: {fileID: 0}
   perkEffectList:
-  - rid: 8843858266994770034
+  - rid: 8843858357949038766
   - rid: 8843858266994770035
-  reSelectable: 1
+  reSelectable: 0
   references:
     version: 2
     RefIds:
-    - rid: 8843858266994770034
-      type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
-      data:
-        perkEffectType: 5
-        effectAmount: 1
     - rid: 8843858266994770035
       type: {class: PerkEffect_Soul, ns: , asm: Assembly-CSharp}
       data:
         perkEffectType: 10
         effectAmount: 1
+    - rid: 8843858357949038766
+      type: {class: PerkEffect_Special, ns: , asm: Assembly-CSharp}
+      data:
+        perkEffectType: 11
