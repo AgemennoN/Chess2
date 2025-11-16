@@ -2,6 +2,15 @@ using System;
 using UnityEngine;
 
 
+public class WeaponStats {
+    public int currentMag;
+    public int currentReserveAmmo;
+    public int firePower;
+    public int fireMaxRange;
+    public int fireMinRange;
+    public int fireArc;
+}
+
 [RequireComponent(typeof(BulletPool))]
 [RequireComponent(typeof(AimIndicator))]
 public abstract class Weapon : MonoBehaviour
@@ -96,5 +105,18 @@ public abstract class Weapon : MonoBehaviour
             weapon.weaponData.fireArc += weaponModifierData.fireArcChange;
         }
 
+    }
+
+    internal WeaponStats GetWeaponStats() {
+        WeaponStats weaponStats = new WeaponStats();
+
+        weaponStats.currentMag = currentMag;
+        weaponStats.currentReserveAmmo = currentReserveAmmo;
+        weaponStats.firePower = weaponData.firePower;
+        weaponStats.fireMaxRange = weaponData.fireMaxRange;
+        weaponStats.fireMinRange = weaponData.fireMinRange;
+        weaponStats.fireArc = weaponData.fireArc;
+
+        return weaponStats;
     }
 }

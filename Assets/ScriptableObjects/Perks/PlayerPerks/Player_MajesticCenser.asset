@@ -13,22 +13,23 @@ MonoBehaviour:
   m_Name: Player_MajesticCenser
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
   title: MajesticCenser
-  description: +1 Ammo max, Add 1 Extra soul slot
+  description: +1 Rook, Add 1 Extra soul slot
   sprite: {fileID: 0}
   perkEffectList:
-  - rid: 8843858266994770034
+  - rid: 8843858361583141324
   - rid: 8843858266994770035
   reSelectable: 1
   references:
     version: 2
     RefIds:
-    - rid: 8843858266994770034
-      type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
-      data:
-        perkEffectType: 5
-        effectAmount: 1
     - rid: 8843858266994770035
       type: {class: PerkEffect_Soul, ns: , asm: Assembly-CSharp}
       data:
         perkEffectType: 10
+        effectAmount: 1
+    - rid: 8843858361583141324
+      type: {class: PerkEffect_Enemy, ns: , asm: Assembly-CSharp}
+      data:
+        perkEffectType: 0
+        effectedType: {fileID: 11400000, guid: 5f2d027fc73d68946ab4149cbf32d5f4, type: 2}
         effectAmount: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 1
+  pieceName: Knight
   maxHealth: 3
   speed: 2
   sprite: {fileID: 8769669200613306614, guid: 6d8120dd00e76a742a9aab9111f1110d, type: 3}

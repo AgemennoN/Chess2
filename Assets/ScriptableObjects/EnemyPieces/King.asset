@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: King
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 5
+  pieceName: King
   maxHealth: 8
   speed: 4
   sprite: {fileID: -3792998861040722889, guid: ba15080edde140f459010a9a5b23caec, type: 3}

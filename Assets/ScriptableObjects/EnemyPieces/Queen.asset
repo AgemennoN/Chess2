@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Queen
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 4
+  pieceName: Queen
   maxHealth: 5
   speed: 3
   sprite: {fileID: 7270707491364550308, guid: 7d37b44dee737524a8cb40ed6ae37faf, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player_WeaponArcAzaltma
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
   title: WeaponArcAzaltma
-  description: -30 fireARc, +1 Range
+  description: -12 fireARc, +1 Range
   sprite: {fileID: 0}
   perkEffectList:
   - rid: 8843858266994770036
@@ -31,4 +31,4 @@ MonoBehaviour:
       type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
       data:
         perkEffectType: 9
-        effectAmount: -30
+        effectAmount: -12

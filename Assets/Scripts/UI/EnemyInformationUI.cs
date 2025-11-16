@@ -7,11 +7,8 @@ using UnityEngine.UI;
 
 public class EnemyInformationUI : MonoBehaviour {
 
-    [Header("BoardInputBroadcaster")]
-    [SerializeField] private BoardInputBroadcaster boardInputBroadcaster;
 
     [Header("Childeren Objects")]
-    [SerializeField] private GameObject informationPanel;
     [SerializeField] private Transform pieceName;
     [SerializeField] private Transform icon;
     [SerializeField] private Transform health;
@@ -39,27 +36,12 @@ public class EnemyInformationUI : MonoBehaviour {
 
     //[SerializeField] private PatternViewer patternViewer;
 
-    private void Awake() {
+
+    public void Initialize() {
         pieceNameTMPro = pieceName.GetComponent<TextMeshProUGUI>();
         pieceImage = icon.Find("image").GetComponent<Image>();
-    }
 
-    private void Start() {
-        boardInputBroadcaster.OnTileHovered += CheckEnemyOnTile;
-
-        informationPanel.SetActive(false);
         CreatePools();
-    }
-
-    private void CheckEnemyOnTile(BoardTile tile) {
-        if (tile != null) {
-            ChessPiece pieceOnTheTile = tile.GetPiece();
-            if (pieceOnTheTile != null && pieceOnTheTile is EnemyPiece) {
-                ShowEnemy(pieceOnTheTile.GetComponent<EnemyPiece>());
-                return;
-            }
-        }
-        Hide();
     }
 
     private void CreatePools() {
@@ -95,13 +77,12 @@ public class EnemyInformationUI : MonoBehaviour {
         SetHealth(stats);
         SetSpeed(stats);
 
-        informationPanel.SetActive(true);
+        gameObject.SetActive(true);
     }
 
-
     public void Hide() {
-        if (informationPanel.activeSelf) {
-            informationPanel.SetActive(false);
+        if (gameObject.activeSelf) {
+            gameObject.SetActive(false);
             ResetPools();
         }
     }
@@ -144,10 +125,6 @@ public class EnemyInformationUI : MonoBehaviour {
         for (int i = 0; i < speedPoolLimit; i++) {
             emptySpeedPool[i].gameObject.SetActive(false);
         }
-    }
-
-    private void OnDestroy() {
-        boardInputBroadcaster.OnTileHovered -= CheckEnemyOnTile;
     }
 
 }

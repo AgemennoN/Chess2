@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
     private PlayerSoulController playerSoulController;
     private BoardManager boardManager;
     private TurnManager turnManager;
+    private InformationUI informationUI;
 
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject perkSelectPanel;
@@ -46,7 +47,8 @@ public class GameManager : MonoBehaviour {
         enemyManager.Initialize();
         playerManager = PlayerManager.Instance;
         playerManager.Initialize();
-
+        informationUI = InformationUI.Instance;
+        informationUI.Initialize();
         playerSoulController = PlayerSoulController.Instance;
         playerSoulController.Initialize();
 
@@ -59,26 +61,25 @@ public class GameManager : MonoBehaviour {
         EnemyManager.onEnemyKingsDie += HandlePlayerWins;
     }
 
-    public IEnumerator StartFloor() {
+    public void LoadNextFloor() { // Called from Perk select panel buttons
+        StartCoroutine(StartFloor());
+    }
+    private IEnumerator StartFloor() {
         yield return StartCoroutine(PrepareNewFloor());
         turnManager.GameStart();
     }
-
-    public IEnumerator PrepareNewFloor() {
-
-        StartCoroutine(playerSoulController.NewFloorPreparation(perkManager.GetSoulModifierData()));
+    private IEnumerator PrepareNewFloor() {
         yield return StartCoroutine(boardManager.NewFloorPreparation());        //Generates Board
         yield return StartCoroutine(enemyManager.NewFloorPreparation());        //Generates Enemies
         yield return StartCoroutine(playerManager.NewFloorPreparation());       //Generates PlayerPiece
+        StartCoroutine(playerSoulController.NewFloorPreparation(perkManager.GetSoulModifierData()));
+        StartCoroutine(informationUI.NewFloorPreparation());
     }
 
     private void HandleEnemyWins() {
-
         // GameManager.OnDefeat_ResetStaticsAllManagers();
-
         gameOverPanel.SetActive(true);
     }
-
 
     public void OnPlayAgainButton() {
         GameManager.OnDefeat_ResetStaticsAllManagers();
@@ -91,21 +92,18 @@ public class GameManager : MonoBehaviour {
     }
 
     private IEnumerator HandlePlayerWinsRoutine() {
+        Floor++;
 
         yield return StartCoroutine(enemyManager.onPlayerWin_EnemyManager());
         yield return StartCoroutine(playerManager.onPlayerWin_PlayerManager());
 
         StartCoroutine(playerSoulController.onPlayerWin_PlayerSoulController());
+        StartCoroutine(informationUI.OnPlayerWin());
         yield return StartCoroutine(boardManager.onPlayerWin_BoardManager());
-
         perkManager.onPlayerWin_PerkManager();
     }
 
-    public void LoadNextFloor() { // Called from Perk select panel buttons
-        Floor++;
-        StartCoroutine(StartFloor());
 
-    }
 
     private void OnDisable() {
         EnemyManager.onEnemyCheckMatesThePlayer -= HandleEnemyWins;

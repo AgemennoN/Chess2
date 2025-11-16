@@ -10,31 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b11cd579f761cc4a81b530d6cc58ee4, type: 3}
-  m_Name: Player_RemoveSoulSlot
+  m_Name: Player_AmmoLuPerk
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
-  title: REMOVE SOUL
-  description: +2 Ammo max, +1 Ammo Regen, Remove 1 soul slot
+  title: Ammo Regen ve Max Ammo
+  description: +2 Max ammo, +1 Ammo Regen
   sprite: {fileID: 0}
   perkEffectList:
-  - rid: 8843858266994770034
-  - rid: 8843858333325066434
-  - rid: 8843858266994770035
+  - rid: 8843858266994770036
+  - rid: 8843858266994770038
   reSelectable: 1
   references:
     version: 2
     RefIds:
-    - rid: 8843858266994770034
-      type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
-      data:
-        perkEffectType: 6
-        effectAmount: 1
-    - rid: 8843858266994770035
-      type: {class: PerkEffect_Soul, ns: , asm: Assembly-CSharp}
-      data:
-        perkEffectType: 10
-        effectAmount: -1
-    - rid: 8843858333325066434
+    - rid: 8843858266994770036
       type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
       data:
         perkEffectType: 5
         effectAmount: 2
+    - rid: 8843858266994770038
+      type: {class: PerkEffect_Weapon, ns: , asm: Assembly-CSharp}
+      data:
+        perkEffectType: 6
+        effectAmount: 1

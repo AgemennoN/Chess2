@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour {
     private PlayerPiece playerPiece;
     private PerkManager perkManager;
     private List<BoardTile> playerAvailableMoves;
-    private Weapon weapon;
+    private Weapon weapon = null;
 
     private int shieldChargesLimit = 2;  // Number of times the player is protected from moving onto a threatened tile.
     private int shieldChargesRemaining;
@@ -138,6 +138,10 @@ public class PlayerManager : MonoBehaviour {
         weapon.InitializeWeapon(perkManager.GetWeaponModifierData());
 
         return playerSpawnAnimation;
+    }
+
+    public Weapon GetWeapon() {
+        return weapon;
     }
 
     private void StartPlayerTurn() {

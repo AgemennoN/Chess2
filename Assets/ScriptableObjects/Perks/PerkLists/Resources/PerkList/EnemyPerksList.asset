@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: EnemyPerksList
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardListSO
   perkList:
+  - {fileID: 11400000, guid: 9bf2837adfbec0d4d9c5a9e4f0c921c4, type: 2}
   - {fileID: 11400000, guid: 5beb894398280754ea234eabf07d0a79, type: 2}
   - {fileID: 11400000, guid: 8cc4a3c544ba95f4aa259b361bca863d, type: 2}
   - {fileID: 11400000, guid: 1b6702c2cc7c41244bdc7eefba22b22d, type: 2}
   - {fileID: 11400000, guid: 2cbed0fbf0a5a6b4c88ded9fefaed38e, type: 2}
-  - {fileID: 11400000, guid: 9bf2837adfbec0d4d9c5a9e4f0c921c4, type: 2}
+  - {fileID: 11400000, guid: 0a3e9c7e0bb8f9f47be179a42b48fc37, type: 2}

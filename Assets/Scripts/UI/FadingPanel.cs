@@ -5,17 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(CanvasGroup))]
 public class FadingPanel : MonoBehaviour {
 
+    [SerializeField] public bool startInvisible = true;
     private CanvasGroup canvasGroup;
     private Coroutine fadeRoutine;
 
     private void Awake() {
         canvasGroup = GetComponent<CanvasGroup>();
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
+
+        if (startInvisible) {
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+        }
     }
 
     private void OnEnable() {
-        FadeIn(1f);
+        //FadeIn(1f);
     }
 
     public Coroutine FadeIn(float duration = 0.5f) {

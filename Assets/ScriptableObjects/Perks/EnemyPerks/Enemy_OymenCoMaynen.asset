@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Enemy_OymenCoMaynen
   m_EditorClassIdentifier: Assembly-CSharp::PerkCardSO
   title: OymenCoMaynen
-  description: "At cok g\xFCcl\xFC olcak"
+  description: At = At + Deve, Add 1 Knight
   sprite: {fileID: 0}
   perkEffectList:
   - rid: 8843858311993098751
+  - rid: 8843858361583141316
   reSelectable: 0
   references:
     version: 2
@@ -54,3 +55,9 @@ MonoBehaviour:
         changeCurrentPattern: 0
         isForMovement: 1
         isForThreat: 1
+    - rid: 8843858361583141316
+      type: {class: PerkEffect_Enemy, ns: , asm: Assembly-CSharp}
+      data:
+        perkEffectType: 0
+        effectedType: {fileID: 11400000, guid: 4add94b770f72c544bb87244e3bab7bf, type: 2}
+        effectAmount: 1

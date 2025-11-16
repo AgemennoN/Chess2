@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bishop
   m_EditorClassIdentifier: Assembly-CSharp::EnemyTypeSO
   enemyType: 2
+  pieceName: Bishop
   maxHealth: 4
   speed: 3
   sprite: {fileID: 7560534232159598683, guid: 43d2cbc0c13de284c970097d1e9cefbb, type: 3}
