@@ -120,11 +120,11 @@ public class PlayerSoulController : MonoBehaviour {
 
     public IEnumerator NewFloorPreparation(SoulModifierData soulModifierData) {
         ApplySoulModification(soulModifierData);
-        yield return soulUI.GetComponent<FadingPanel>().FadeIn(2f);
+        yield return soulUI.GetComponent<FadingPanel>().FadeIn(1f);
     }
 
     public IEnumerator onPlayerWin_PlayerSoulController() {
-        yield return soulUI.GetComponent<FadingPanel>().FadeOut(2f);
+        yield return soulUI.GetComponent<FadingPanel>().FadeOut(1f);
     }
 
 

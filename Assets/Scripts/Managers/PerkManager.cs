@@ -107,6 +107,7 @@ public class PerkManager : MonoBehaviour {
             enemyPerks_Available.Remove(newEnemyPerk);
         ApplyPerk(newEnemyPerk);
 
+        StartCoroutine(perkSelectionPanel.FadeOut(0.5f));
         OnPerkSelectionEnded?.Invoke();
     }
 
@@ -253,8 +254,7 @@ public class PerkManager : MonoBehaviour {
 
     public void onPlayerWin_PerkManager() {
         SendPerksToTheSelectionPanel();
-        perkSelectionPanel.gameObject.SetActive(true);
-
+        StartCoroutine(perkSelectionPanel.FadeIn());
     }
 
     private void OnDisable() {
