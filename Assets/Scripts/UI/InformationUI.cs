@@ -12,6 +12,7 @@ public class InformationUI : MonoBehaviour {
     [Header("Child UI Objects")]
     [SerializeField] private EnemyInformationUI enemyInformationUI;
     [SerializeField] private PlayerInformationUI playerInformationUI;
+    [SerializeField] private TopSideInformationUI topSideInformationUI;
 
     [Header("Self Components")]
     [SerializeField] private FadingPanel fadingPanel;
@@ -30,12 +31,15 @@ public class InformationUI : MonoBehaviour {
             enemyInformationUI = GetComponentInChildren<EnemyInformationUI>();
         if (playerInformationUI == null)
             playerInformationUI = GetComponentInChildren<PlayerInformationUI>();
+        if (topSideInformationUI == null)
+            topSideInformationUI = GetComponentInChildren<TopSideInformationUI>();
         if (fadingPanel == null)
             fadingPanel = GetComponent<FadingPanel>();
 
 
         enemyInformationUI.gameObject.SetActive(false);
         playerInformationUI.gameObject.SetActive(false);
+        topSideInformationUI.gameObject.SetActive(false);
 
         enemyInformationUI.Initialize();
 
@@ -55,6 +59,7 @@ public class InformationUI : MonoBehaviour {
     public IEnumerator NewFloorPreparation() {
         yield return StartCoroutine(playerInformationUI.NewFloorPreperation());
         playerInformationUI.Show();
+        topSideInformationUI.NewFloorPreperation();
         yield return fadingPanel.FadeIn(1f);
     }
 
@@ -62,6 +67,8 @@ public class InformationUI : MonoBehaviour {
         yield return fadingPanel.FadeOut();
         playerInformationUI.Hide();
         enemyInformationUI.Hide();
+
+        topSideInformationUI.OnPlayerWin();
     }
 
     private void OnEnable() {

@@ -3,20 +3,17 @@ using TMPro;
 using UnityEngine;
 
 public class PlayerInformationUI : MonoBehaviour {
-
     [SerializeField] private TextMeshProUGUI firePowerTMPro;
     [SerializeField] private TextMeshProUGUI fireRangeTMPro;
     [SerializeField] private TextMeshProUGUI fireArcTMPro;
-    private WeaponStats weaponStats = null;
 
     public IEnumerator NewFloorPreperation() {
-        GetWeaponStats();
-        SetTexts();
+        WeaponDataSO weaponData = GetWeaponDataFromPlayerManager();
+        SetTexts(weaponData);
         yield break;
     }
 
     public void Show() {
-        if (weaponStats == null) return;
         gameObject.SetActive(true);
     }
 
@@ -25,17 +22,14 @@ public class PlayerInformationUI : MonoBehaviour {
             gameObject.SetActive(false);
     }
 
-    private void GetWeaponStats() {
-        Weapon weapon = PlayerManager.Instance.GetWeapon();
-        if (weapon != null) {
-            weaponStats = weapon.GetWeaponStats();
-        }
+    private WeaponDataSO GetWeaponDataFromPlayerManager() {
+        return PlayerManager.Instance.GetWeapon().GetWeaponData();
     }
 
-    private void SetTexts() {
-        firePowerTMPro.text = weaponStats.firePower.ToString();
-        fireRangeTMPro.text = $"{weaponStats.fireMaxRange} - {weaponStats.fireMinRange}";
-        fireArcTMPro.text = weaponStats.fireArc.ToString() + "°";
+    private void SetTexts(WeaponDataSO weaponData) {
+        firePowerTMPro.text = weaponData.firePower.ToString();
+        fireRangeTMPro.text = $"{weaponData.fireMaxRange} - {weaponData.fireMinRange}";
+        fireArcTMPro.text = weaponData.fireArc.ToString() + "°";
     }
 
 }

@@ -2,15 +2,6 @@ using System;
 using UnityEngine;
 
 
-public class WeaponStats {
-    public int currentMag;
-    public int currentReserveAmmo;
-    public int firePower;
-    public int fireMaxRange;
-    public int fireMinRange;
-    public int fireArc;
-}
-
 [RequireComponent(typeof(BulletPool))]
 [RequireComponent(typeof(AimIndicator))]
 public abstract class Weapon : MonoBehaviour
@@ -23,6 +14,9 @@ public abstract class Weapon : MonoBehaviour
     protected BulletPool bulletPool;
     protected AimIndicator aimIndicator;
     private bool isAiming = false;
+    public Action<int> OnShoot; // send CurrentMag
+    public Action<int,int> OnReloadMag; // send CurrentMag,CurrentReserve
+    public Action<int> OnRegenerateReserve; // send CurrentReserve
 
     protected virtual void Awake() {
         bulletPool = GetComponent<BulletPool>();
@@ -70,17 +64,19 @@ public abstract class Weapon : MonoBehaviour
         int needed = weaponData.magCapacity - currentMag;
         int toReload = Math.Min(needed, Math.Min(weaponData.reloadAmount, currentReserveAmmo));
 
-        // To Do: Reload Animation
         currentMag += toReload;
         currentReserveAmmo -= toReload;
+        OnReloadMag?.Invoke(currentMag, currentReserveAmmo); // Weapon UI subscribe this
+
     }
 
     protected virtual void RegenerateReserve() {
         int needed = weaponData.maxReserveAmmo - currentReserveAmmo;
         int toReload = Math.Min(needed, weaponData.reloadAmount);
 
-        // To Do: RegenerateReserve animation;
         currentReserveAmmo += toReload;
+        OnRegenerateReserve?.Invoke(currentReserveAmmo); // Weapon UI subscribe this
+
     }
 
     public void PrintWeaponInfo() {
@@ -107,16 +103,7 @@ public abstract class Weapon : MonoBehaviour
 
     }
 
-    internal WeaponStats GetWeaponStats() {
-        WeaponStats weaponStats = new WeaponStats();
-
-        weaponStats.currentMag = currentMag;
-        weaponStats.currentReserveAmmo = currentReserveAmmo;
-        weaponStats.firePower = weaponData.firePower;
-        weaponStats.fireMaxRange = weaponData.fireMaxRange;
-        weaponStats.fireMinRange = weaponData.fireMinRange;
-        weaponStats.fireArc = weaponData.fireArc;
-
-        return weaponStats;
+    internal WeaponDataSO GetWeaponData() {
+        return weaponData;
     }
 }

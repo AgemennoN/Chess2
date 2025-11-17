@@ -55,6 +55,7 @@ public class Shotgun : Weapon
 
         currentMag -= 1;
         Aim(false);
+        OnShoot?.Invoke(currentMag);
         return isShooted;
     }
 
