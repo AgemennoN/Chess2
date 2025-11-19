@@ -16,6 +16,7 @@ public class PerkManager : MonoBehaviour {
 
 
     [SerializeField] private PerkSelectionPanel perkSelectionPanel;
+    [SerializeField] private PerkInformationUI perkInformationUI;
 
     private Dictionary<EnemyType, EnemyModifierData> enemyModifierDictionary;
     private Dictionary<EnemyType, int> enemySpawnModificationDict;
@@ -108,6 +109,9 @@ public class PerkManager : MonoBehaviour {
         ApplyPerk(newEnemyPerk);
 
         StartCoroutine(perkSelectionPanel.FadeOut(0.5f));
+        perkInformationUI.AddPlayerPerk(newPlayerPerk);
+        perkInformationUI.AddEnemyPerk(newEnemyPerk);
+
         OnPerkSelectionEnded?.Invoke();
     }
 
@@ -158,6 +162,7 @@ public class PerkManager : MonoBehaviour {
             enemyModifierDictionary[effectedTypeSO.enemyType] = modifierData;
         }
     }
+    
     internal void Apply_WeaponEffect(PerkEffectType perkEffectType, int effectAmount) {
         if (weaponModifierData == null)
             weaponModifierData = new WeaponModifierData();

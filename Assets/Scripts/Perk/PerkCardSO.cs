@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PerkCardSO : ScriptableObject {
     public string title;
     public string description;
-    public Image sprite;
+    public Image image;
 
     [SerializeReference]
     public List<PerkEffect> perkEffectList = new List<PerkEffect>();
