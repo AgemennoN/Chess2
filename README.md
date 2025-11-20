@@ -1,8 +1,8 @@
-# 📘 Shotgun King Clone — Practice Project
+# ♔ Shotgun King Clone — Practice Project
 This project was created as a personal learning exercise to improve my programming skills in game development, Unity, and object-oriented programming principles (OOP).
 It is a self-made clone of the Shotgun King (Demo), built from scratch using Unity 6.2.
 
-## 🎮 ▶ Play the Game
+## ▶ Play the Game
 
 You can play the latest build on itch.io:
 👉 https://agemennon.itch.io/chess-2
@@ -16,7 +16,7 @@ You can play the latest build on itch.io:
 - Experiment with perk systems and game architecture
 - Rebuild mechanics from an existing game to understand design patterns
 
-## 📈 Roadmap / TODO
+## 📈 Roadmap
 - Improve UI layout
 - Add a proper main menu
 - Add animations & VFX
