@@ -24,10 +24,10 @@ You can play the latest build on itch.io:
 - Add save/load
 - Add Language selection
 
-# 📸 Screenshots
+## 📸 Screenshots
 <img width="1117" height="633" alt="image" src="https://github.com/user-attachments/assets/aa3e5393-4acf-4ecc-8a5b-fab29fef00d8" />
 
 
-# 📄 License
+## 📄 License
 
 This project is made for educational purposes only and is not affiliated with Shotgun King or its original creators.
